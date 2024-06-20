@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload an Excel File</title>
+</head>
+<body>
+    <h1>Upload your Excel file</h1>
+
+        <input name="ClientID" type="text" placeholder="Client ID" id="clientID">
+        <input name="CampaignID" type="text" placeholder="Campaign ID" id="CampaignID">
+        <input name="file" type="file" id="uploadFile">
+        <button id="saveData">Upload</button>
+</body>
+<script>
+     function showAlert(message) {
+            alert(message);
+        }
+    document.getElementById('saveData').addEventListener('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+        const clientID = document.getElementById('clientID').value;
+        const campaignID = document.getElementById('CampaignID').value;
+        const file = document.getElementById('uploadFile').files[0];
+        switch(true){
+            case !clientID:
+                showAlert('Client ID is required');
+                return;
+            case !campaignID:
+                showAlert('Campaign ID is required');
+                return;
+            case !file:
+                showAlert('File is required');
+                return;
+        }
+        formData.append('file', file);
+        formData.append('ClientID', clientID);
+        formData.append('CampaignID', campaignID);
+        
+        fetch('/vapi/uploadfile/', {
+            method: 'POST',
+            body: formData
+        }).then((res)=>{
+            console.log(res);
+            if(res.status === 200){
+                showAlert('File uploaded successfully');
+                // move back to the previous page
+                window.history.back();
+            }else{
+                showAlert('Failed to upload file');
+            }
+        }).catch((err)=>{
+            showAlert('Failed to upload file');
+        });
+        });
+</script>
+</html>

@@ -1,0 +1,16 @@
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+teli-backend/.env
+teli-backend/github_key
+teli-backend/github_key.pub
+teli-backend/test (1).csv
+teli-backend/static/
+
