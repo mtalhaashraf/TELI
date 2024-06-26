@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
-	import { editCampaignFormSchema } from '$lib/schemas';
+	import { addCampaignFormSchema } from '$lib/schemas';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import Textarea from '../ui/textarea/textarea.svelte';
@@ -15,6 +15,10 @@
 			value: '',
 			label: ''
 		},
+		Profile: {
+			value: '',
+			label: ''
+		},
 		script: '',
 		desiredoutcome: '',
 		prompt: '',
@@ -22,9 +26,10 @@
 	};
 
 	export let assistants;
+	export let profiles;
 
 	const superFormData = superForm(form, {
-		validators: zodClient(editCampaignFormSchema),
+		validators: zodClient(addCampaignFormSchema),
 		dataType: 'json'
 	});
 
@@ -62,6 +67,12 @@
 			options: assistants
 		},
 		{
+			label: 'Profile',
+			name: 'Profile',
+			type: 'dropdown',
+			options: profiles
+		},
+		{
 			label: 'Sales Manager Script',
 			name: 'script',
 			type: 'textarea'
@@ -82,6 +93,7 @@
 		}
 	];
 
+ 	//  $: console.log(form);
 </script>
 
 <form class="mx-auto min-w-[640px]" method="POST" use:enhance>
@@ -101,7 +113,7 @@
 						<Form.Label>{label}</Form.Label>
 						<Select.Root bind:selected={$formData[name]}>
 							<Select.Trigger {...attrs}>
-								<Select.Value placeholder="Select a assistant" />
+								<Select.Value placeholder="Select a {name}" />
 							</Select.Trigger>
 							<Select.Content>
 								{#each options as { id, name } (id)}
@@ -140,5 +152,5 @@
 			</Form.Field>
 		{/if}
 	{/each}
-	<Form.Button>Add</Form.Button>
+	<Form.Button>Save</Form.Button>
 </form>

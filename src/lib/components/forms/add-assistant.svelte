@@ -16,7 +16,7 @@
 	});
 
 	const { form: formData } = superFormData;
-	$: console.log($formData);
+
 </script>
 
 <div class="flex w-full flex-col items-center">
@@ -42,7 +42,7 @@
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Button>Add</Form.Button>
+		<Form.Button>Save</Form.Button>
 	</form>
 </div>
 \

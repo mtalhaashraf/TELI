@@ -14,10 +14,11 @@
 		addSortBy,
 		addTableFilter
 	} from 'svelte-headless-table/plugins';
-	import { readable } from 'svelte/store';
+	import { readable, writable } from 'svelte/store';
 	import Actions from './components/data-table-actions.svelte';
 	import type { Campaign } from '../../../types/campaign.type';
 	import { goto } from '$app/navigation';
+	import { Play, Pause } from 'lucide-svelte';
 
 	export let data;
 
@@ -32,6 +33,15 @@
 		select: addSelectedRows(),
 		hide: addHiddenColumns()
 	});
+
+	const playStatus = writable<{ [id: string]: boolean }>({});
+
+	const togglePlayPause = (id: string) => {
+		playStatus.update(status => {
+			status[id] = !status[id];
+			return status;
+		});
+	};
 
 	const columns = table.createColumns([
 		table.column({
@@ -71,6 +81,18 @@
 			header: 'End Date',
 			accessor: 'enddate',
 			cell: ({ value }) => formatDate(value || '')
+		}),
+		table.column({
+			header: 'Campaign Status',
+			accessor: 'campaignstatus',
+			cell: ({ row }) => {
+				return row.original.campaignid;
+			},
+			plugins: {
+				sort: {
+					disable: true
+				}
+			}
 		}),
 		table.column({
 			header: 'Actions',
@@ -114,7 +136,6 @@
 <svelte:head>
 	<title>Campaigns</title>
 </svelte:head>
-
 <div class="w-full">
 	<div class="flex items-center py-4">
 		<Input class="max-w-sm" placeholder="Search..." type="text" bind:value={$filterValue} />
@@ -164,10 +185,20 @@
 											<div class="text-right font-medium">
 												<Render of={cell.render()} />
 											</div>
-										{:else if cell.id === 'status'}
-											<div class="capitalize">
-												<Render of={cell.render()} />
-											</div>
+										{:else if cell.id === 'campaignstatus'}
+											{#await $playStatus}
+												<p>Loading...</p>
+											{:then status}
+												<Button on:click={() => togglePlayPause(cell.value)}>
+													{#if status[cell.value]}
+														<Pause />
+													{:else}
+														<Play />
+													{/if}
+												</Button>
+											{:catch error}
+												<p>Error: {error.message}</p>
+											{/await}
 										{:else}
 											<Render of={cell.render()} />
 										{/if}
@@ -188,13 +219,11 @@
 			variant="outline"
 			size="sm"
 			on:click={() => ($pageIndex = $pageIndex - 1)}
-			disabled={!$hasPreviousPage}>Previous</Button
-		>
+			disabled={!$hasPreviousPage}>Previous</Button>
 		<Button
 			variant="outline"
 			size="sm"
 			disabled={!$hasNextPage}
-			on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button
-		>
+			on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button>
 	</div>
 </div>

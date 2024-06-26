@@ -8,5 +8,5 @@
 </svelte:head>
 
 <div class="flex w-full flex-col items-center">
-	<AddCampaign assistants={data.assistants} />
+	<AddCampaign assistants={data.assistants} profiles={data.profiles} />
 </div>

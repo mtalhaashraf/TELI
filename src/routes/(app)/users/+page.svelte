@@ -179,6 +179,10 @@
 											<a class="capitalize hover:text-blue-500"  href='/' target="_blank">
 												<Render of={cell.render()} />
 											</a>
+										{:else if cell.id === 'email2'}
+											<a class="capitalize hover:text-blue-500"  href='mailto:{cell.render()}' target="_blank">
+												<Render of={cell.render()} />
+											</a>
 										{:else}
 											<Render of={cell.render()} />
 										{/if}

@@ -52,7 +52,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const { startdate, enddate, Assistant, ...rest } = form.data;
+		const {Assistant, ...rest } = form.data;
 
 		const newcampaigns = {
 			assistant: Assistant.label,
