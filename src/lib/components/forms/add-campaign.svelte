@@ -4,27 +4,10 @@
 	import { addCampaignFormSchema } from '$lib/schemas';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import Textarea from '../ui/textarea/textarea.svelte';
 	import * as Select from '../ui/select';
+	import Textarea from '../ui/textarea/textarea.svelte';
 
-	let form:any = {
-		campaignname: '',
-		startdate: '',
-		enddate: '',
-		Assistant: {
-			value: '',
-			label: ''
-		},
-		Profile: {
-			value: '',
-			label: ''
-		},
-		script: '',
-		desiredoutcome: '',
-		prompt: '',
-		description: ''
-	};
-
+	export let form;
 	export let assistants;
 	export let profiles;
 
@@ -33,7 +16,7 @@
 		dataType: 'json'
 	});
 
-	const { form: formData, enhance } = superFormData;
+	const { form: formData, enhance, allErrors } = superFormData;
 
 	interface Field {
 		label: string;
@@ -67,8 +50,8 @@
 			options: assistants
 		},
 		{
-			label: 'Profile',
-			name: 'Profile',
+			label: 'Client',
+			name: 'Client',
 			type: 'dropdown',
 			options: profiles
 		},
@@ -93,7 +76,7 @@
 		}
 	];
 
- 	//  $: console.log(form);
+	$: console.log($formData, $allErrors);
 </script>
 
 <form class="mx-auto min-w-[640px]" method="POST" use:enhance>

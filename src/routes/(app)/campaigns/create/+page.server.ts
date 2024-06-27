@@ -5,7 +5,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async ({ locals: { supabaseServiceRole, getSession }}) => {
+export const load = async ({ locals: { supabaseServiceRole, getSession } }) => {
 	const { user } = await getSession();
 
 	if (!user) {
@@ -14,22 +14,21 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }}) => {
 
 	const assistants = await assistant.get();
 
-	const { data: profiles, error } = await supabaseServiceRole
-		.from('profiles')
-		.select('*')
+	const { data: profiles, error } = await supabaseServiceRole.from('profiles').select('*');
 
 	if (error) {
 		console.error('Error fetching profile:', error);
 	}
 
 	return {
-		profiles: profiles?.map((e: any) =>({
+		form: await superValidate({}, zod(addCampaignFormSchema)),
+		profiles: profiles?.map((e: any) => ({
 			id: e.clientID,
 			name: e.full_name
 		})),
 		assistants: assistants.map((e: any) => ({
 			id: e.id,
-			name: e.name,
+			name: e.name
 		}))
 	};
 };
@@ -49,21 +48,19 @@ export const actions: Actions = {
 				form
 			});
 		}
-		
-		console.log(form);
-		
-		const {Profile, Assistant, ...rest } = form.data;
-		
+
+		const { Client, Assistant, ...rest } = form.data;
+
+		console.log('Insert Campaign: ', form.data);
+
 		const newcampaigns = {
 			assistant: Assistant.label,
 			assistID: Assistant.value,
-			clientid: Number(Profile.value),
+			clientid: Number(Client.value),
 			...rest
 		};
-		
-		const { error } = await event.locals.supabaseServiceRole
-			.from('campaigns')
-			.insert(newcampaigns);
+
+		const { error } = await event.locals.supabaseServiceRole.from('campaigns').insert(newcampaigns);
 
 		if (error) {
 			console.log(error);

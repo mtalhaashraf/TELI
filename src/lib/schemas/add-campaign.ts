@@ -5,13 +5,13 @@ export const addCampaignFormSchema = z.object({
 	startdate: z.string(),
 	enddate: z.string(),
 	Assistant: z.object({
-        value: z.string(),
-        label: z.string(),
-    }),
-	Profile: z.object({
-        value: z.string(),
-        label: z.string(),
-    }),
+		value: z.string(),
+		label: z.string()
+	}),
+	Client: z.object({
+		value: z.number(),
+		label: z.string()
+	}),
 	script: z.string(),
 	desiredoutcome: z.string(),
 	prompt: z.string(),

@@ -2,7 +2,7 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import UploadFile from './upload-file.svelte';
 
 	export let id: any;
@@ -17,6 +17,20 @@
 		console.log(id);
 		goto('/campaigns/' + id);
 	};
+
+	function reloadPage() {
+		const thisPage = window.location.pathname;
+
+		goto('/').then(() => goto(thisPage));
+	}
+
+	const handleDelete = async () => {
+		await fetch(`/api/campaigns/${id}`, {
+			method: 'DELETE'
+		});
+
+		invalidateAll();
+	};
 </script>
 
 <DropdownMenu.Root>
@@ -28,7 +42,7 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
-		<!-- <DropdownMenu.Item>Delete</DropdownMenu.Item> -->
+		<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
 		<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

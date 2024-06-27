@@ -14,17 +14,18 @@
 		addSortBy,
 		addTableFilter
 	} from 'svelte-headless-table/plugins';
-	import { readable, writable } from 'svelte/store';
+	import { readable } from 'svelte/store';
 	import Actions from './components/data-table-actions.svelte';
+	import Switch from './components/data-table-switch-button.svelte';
 	import type { Campaign } from '../../../types/campaign.type';
 	import { goto } from '$app/navigation';
-	import { Play, Pause } from 'lucide-svelte';
 
 	export let data;
 
-	const { campaigns } = data;
+	let { campaigns } = data;
+	$: ({ campaigns } = data);
 
-	const table = createTable(readable(campaigns as Campaign[]), {
+	let table = createTable(readable(campaigns as Campaign[]), {
 		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
@@ -34,16 +35,19 @@
 		hide: addHiddenColumns()
 	});
 
-	const playStatus = writable<{ [id: string]: boolean }>({});
-
-	const togglePlayPause = (id: string) => {
-		playStatus.update(status => {
-			status[id] = !status[id];
-			return status;
-		});
-	};
-
-	const columns = table.createColumns([
+	let columns = table.createColumns([
+		table.column({
+			header: 'Campaign Status',
+			accessor: 'status',
+			cell: () => {
+				return createRender(Switch);
+			},
+			plugins: {
+				sort: {
+					disable: true
+				}
+			}
+		}),
 		table.column({
 			header: 'Name',
 			accessor: 'campaignname',
@@ -82,18 +86,7 @@
 			accessor: 'enddate',
 			cell: ({ value }) => formatDate(value || '')
 		}),
-		table.column({
-			header: 'Campaign Status',
-			accessor: 'campaignstatus',
-			cell: ({ row }) => {
-				return row.original.campaignid;
-			},
-			plugins: {
-				sort: {
-					disable: true
-				}
-			}
-		}),
+
 		table.column({
 			header: 'Actions',
 			accessor: 'campaignid',
@@ -108,25 +101,23 @@
 		})
 	]);
 
-	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
+	let { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
 		table.createViewModel(columns);
 
-	const { sortKeys } = pluginStates.sort;
+	let { sortKeys } = pluginStates.sort;
 
-	const { hiddenColumnIds } = pluginStates.hide;
-	const ids = flatColumns.map((c) => c.id);
+	let { hiddenColumnIds } = pluginStates.hide;
+	let ids = flatColumns.map((c) => c.id);
 	let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
 
 	$: $hiddenColumnIds = Object.entries(hideForId)
 		.filter(([, hide]) => !hide)
 		.map(([id]) => id);
 
-	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
-	const { filterValue } = pluginStates.filter;
+	let { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
+	let { filterValue } = pluginStates.filter;
 
-	const { selectedDataIds } = pluginStates.select;
-
-	const hideableCols = ['status', 'email', 'amount'];
+	let { selectedDataIds } = pluginStates.select;
 
 	const handleAddCampaign = () => {
 		goto('/campaigns/create');
@@ -185,20 +176,10 @@
 											<div class="text-right font-medium">
 												<Render of={cell.render()} />
 											</div>
-										{:else if cell.id === 'campaignstatus'}
-											{#await $playStatus}
-												<p>Loading...</p>
-											{:then status}
-												<Button on:click={() => togglePlayPause(cell.value)}>
-													{#if status[cell.value]}
-														<Pause />
-													{:else}
-														<Play />
-													{/if}
-												</Button>
-											{:catch error}
-												<p>Error: {error.message}</p>
-											{/await}
+										{:else if cell.id === 'status'}
+											<div class="capitalize">
+												<Render of={cell.render()} />
+											</div>
 										{:else}
 											<Render of={cell.render()} />
 										{/if}
@@ -219,11 +200,13 @@
 			variant="outline"
 			size="sm"
 			on:click={() => ($pageIndex = $pageIndex - 1)}
-			disabled={!$hasPreviousPage}>Previous</Button>
+			disabled={!$hasPreviousPage}>Previous</Button
+		>
 		<Button
 			variant="outline"
 			size="sm"
 			disabled={!$hasNextPage}
-			on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button>
+			on:click={() => ($pageIndex = $pageIndex + 1)}>Next</Button
+		>
 	</div>
 </div>

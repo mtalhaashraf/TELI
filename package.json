@@ -33,6 +33,7 @@
 	"type": "module",
 	"dependencies": {
 		"@internationalized/date": "^3.5.4",
+		"@stripe/stripe-js": "^4.0.0",
 		"@supabase/auth-helpers-sveltekit": "^0.13.0",
 		"@supabase/supabase-js": "^2.43.4",
 		"bits-ui": "^0.21.10",

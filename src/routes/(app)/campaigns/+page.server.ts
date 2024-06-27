@@ -3,8 +3,12 @@ import type { LayoutServerLoad } from '../../$types';
 
 export const load: LayoutServerLoad = async (props) => {
 	const {
-		locals: { supabaseServiceRole, getSession }
+		locals: { supabaseServiceRole, getSession },
+		depends
 	} = props;
+
+	console.log('Getting campaigns data...');
+
 	const session = await getSession();
 
 	if (!session) {

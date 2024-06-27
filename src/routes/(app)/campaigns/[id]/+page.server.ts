@@ -24,9 +24,21 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		value: data?.assistID,
 		label: data?.assistant
 	};
-
+	function formatDate(dateString: any) {
+		const date = new Date(dateString);
+		const year = date.getUTCFullYear();
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+		const day = String(date.getUTCDate()).padStart(2, '0');
+		return `${year}-${month}-${day}`;
+	  }
+	const {startdate, enddate, ...rest} = data
+	const formatedData = {
+		startdate: formatDate(data?.startdate),
+		enddate: formatDate(data?.enddate),
+		...rest
+	}
 	return {
-		form: await superValidate(({ Assistant, ...data } as any) || {}, zod(editCampaignFormSchema)),
+		form: await superValidate(({ Assistant, ...formatedData } as any) || {}, zod(editCampaignFormSchema)),
 
 		assistants: assistants.map((e: any) => ({
 			id: e.id,
@@ -52,7 +64,9 @@ export const actions: Actions = {
 			});
 		}
 
-		const {Assistant, ...rest } = form.data;
+		const { Assistant, ...rest } = form.data;
+
+		console.log('Update Campaign: ', form.data);
 
 		const newcampaigns = {
 			assistant: Assistant.label,
