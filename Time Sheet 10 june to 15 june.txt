@@ -1,0 +1,68 @@
+---- Monday update:
+Total hours = 4
+
+
+
+- added shadcn in project
+
+
+
+- added data table
+
+
+
+- remove template code which is contradicting with shadcn components
+
+
+
+- added new tailwindcss configurations
+
+
+
+----- Tuesday update:
+Hours = Work 4h + meeting 1h
+
+
+
+Integrated users api to data table
+Integrated edit user form with table
+Update settings module component
+
+
+
+----- Update wednesday & Thursday:
+Hours = 8
+
+
+
+Add new project for shadcn library
+Add generic components like input, form, table, button etc
+Added tailwindcss
+
+
+
+----- Last week update = friday & saturday
+Hours = 10
+
+
+
+Created edit profile schema
+Added actions with sveltekit superform
+Added validators in case of any validation to be added
+
+
+
+Added supabase observable
+Added layout to protect authenicated routes
+Created header, sidebar and content layout
+
+
+
+Last week time sheet:
+Monday = 4h
+Tuesday = 4h work, 1h meeting
+Wednesday = 4h
+Thursday = 4h
+Friday = 6h
+Saturday = 4h
+Total = 27hours
