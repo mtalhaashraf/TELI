@@ -1,10 +1,10 @@
-export interface Profile {
+export interface Client {
 	apptsperslot: number | null;
 	avatar_url: string | null;
 	cell: string | null;
 	clientID: number;
 	company_name: string | null;
-	email2: string | null;
+	email: string | null;
 	endtime: string | null;
 	full_name: string | null;
 	id: string;

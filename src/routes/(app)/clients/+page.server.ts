@@ -11,17 +11,6 @@ export const load: LayoutServerLoad = async (props) => {
 		throw redirect(303, '/login');
 	}
 
-	const { data: users } = await supabaseServiceRole.from('users').select(`*`);
 	const { data: clients } = await supabaseServiceRole.from('clients').select(`*`);
-
-	return {
-		users: users
-			?.filter((e) => e.id)
-			.map((e) => {
-				return {
-					client: clients?.find((client) => client.id == e.client_id)?.full_name,
-					...e
-				};
-			})
-	};
+	return { clients };
 };

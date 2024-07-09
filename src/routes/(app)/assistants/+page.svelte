@@ -1,23 +1,20 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { cn } from '$lib/utils.js';
 	import ArrowUpDown from 'lucide-svelte/icons/arrow-up-down';
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
 	import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
 	import {
 		addHiddenColumns,
 		addPagination,
-		addSelectedRows,
 		addSortBy,
 		addTableFilter
 	} from 'svelte-headless-table/plugins';
 	import { readable } from 'svelte/store';
 	import type { Assistant } from '../../../types/assistant.type';
 	import Actions from './components/data-table-actions.svelte';
-	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -29,7 +26,6 @@
 		filter: addTableFilter({
 			fn: ({ filterValue, value }) => value.includes(filterValue)
 		}),
-		select: addSelectedRows(),
 		hide: addHiddenColumns()
 	});
 
@@ -37,22 +33,12 @@
 		table.column({
 			header: 'Name',
 			accessor: 'name',
-			cell: ({ value }) => value || '-',
-			plugins: {
-				sort: {
-					disable: true
-				}
-			}
+			cell: ({ value }) => value || '-'
 		}),
 		table.column({
 			header: 'First Message',
 			accessor: 'firstMessage',
-			cell: ({ value }) => value || '-',
-			plugins: {
-				sort: {
-					disable: true
-				}
-			}
+			cell: ({ value }) => value || '-'
 		}),
 		table.column({
 			header: 'System Prompt',
@@ -89,10 +75,8 @@
 	const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	const { filterValue } = pluginStates.filter;
 
-	const { selectedDataIds } = pluginStates.select;
-
 	const hideableCols = ['status', 'email', 'amount'];
-
+	
 	const sortableCells = ['firstMessage', 'name'];
 
 	const handleAddAssistant = () => {
@@ -119,7 +103,13 @@
 								<Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
 									<Table.Head {...attrs} class={cn('[&:has([role=checkbox])]:pl-3')}>
 										{#if sortableCells.includes(cell.id)}
-											<Button variant="ghost" on:click={props.sort.toggle}>
+											<Button
+												variant="ghost"
+												on:click={(e) => {
+													console.log('sort');
+													props.sort.toggle(e);
+												}}
+											>
 												<Render of={cell.render()} />
 												<ArrowUpDown
 													class={cn(
@@ -141,7 +131,7 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'}>
+						<Table.Row {...rowAttrs}>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
@@ -166,9 +156,6 @@
 		</Table.Root>
 	</div>
 	<div class="flex items-center justify-end space-x-2 py-4">
-		<div class="flex-1 text-sm text-muted-foreground">
-			{Object.keys($selectedDataIds).length} of {$rows.length} row(s) selected.
-		</div>
 		<Button
 			variant="outline"
 			size="sm"

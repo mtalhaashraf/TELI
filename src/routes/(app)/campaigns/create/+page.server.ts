@@ -51,7 +51,7 @@ export const actions: Actions = {
 
 		const { Client, Assistant, ...rest } = form.data;
 
-		console.log('Insert Campaign: ', form.data);
+		// console.log('Insert Campaign: ', form.data);
 
 		const newcampaigns = {
 			assistant: Assistant.label,

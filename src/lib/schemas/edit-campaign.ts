@@ -10,7 +10,6 @@ export const editCampaignFormSchema = z.object({
     }),
 	script: z.string(),
 	desiredoutcome: z.string(),
-	prompt: z.string(),
 	description: z.string()
 });
 

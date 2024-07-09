@@ -118,7 +118,7 @@
 	let { filterValue } = pluginStates.filter;
 
 	let { selectedDataIds } = pluginStates.select;
-
+	const sortableColumn = ['campaignname','assistant','desiredoutcome','description']
 	const handleAddCampaign = () => {
 		goto('/campaigns/create');
 	};
@@ -145,7 +145,7 @@
 											<div class="text-right font-medium">
 												<Render of={cell.render()} />
 											</div>
-										{:else if cell.id === 'email'}
+										{:else if sortableColumn.includes(cell.id)}
 											<Button variant="ghost" on:click={props.sort.toggle}>
 												<Render of={cell.render()} />
 												<ArrowUpDown
@@ -168,7 +168,7 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'}>
+						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'} class='text-center'>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>

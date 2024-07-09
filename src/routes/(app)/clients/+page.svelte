@@ -16,14 +16,14 @@
 	} from 'svelte-headless-table/plugins';
 	import { readable } from 'svelte/store';
 	import Actions from './components/data-table-actions.svelte';
-	import type { User } from '../../../types/user.type';
+	import type { Client } from '../../../types/client.type';
 	import { goto } from '$app/navigation';
 
 	export let data;
 
-	const { users } = data;
+	const { clients } = data;
 
-	const table = createTable(readable(users as unknown as User[]), {
+	const table = createTable(readable(clients as Client[]), {
 		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
@@ -32,22 +32,6 @@
 		select: addSelectedRows(),
 		hide: addHiddenColumns()
 	});
-
-	const capitalizeColumns = ['status', 'rights'];
-
-	const hideableCols = ['status', 'email', 'amount'];
-
-	const sortableColumn = [
-		'rights',
-		'status',
-		'email2',
-		'cell',
-		'phone',
-		'company_email',
-		'full_name',
-		'client'
-	];
-
 	const columns = table.createColumns([
 		table.column({
 			header: 'Name',
@@ -55,13 +39,13 @@
 			cell: ({ value }) => value || '-'
 		}),
 		table.column({
-			header: 'Client',
-			accessor: 'client',
+			header: 'Company Name',
+			accessor: 'company_name',
 			cell: ({ value }) => value || '-'
 		}),
 		table.column({
-			header: 'Company Email',
-			accessor: 'company_email',
+			header: 'Company Website',
+			accessor: 'website',
 			cell: ({ value }) => value || '-'
 		}),
 		table.column({
@@ -75,14 +59,16 @@
 			cell: ({ value }) => value || '-'
 		}),
 		table.column({
-			header: 'Secondary Email',
-			accessor: 'email2',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Rights',
-			accessor: 'rights',
-			cell: ({ value }) => value || '-'
+			header: 'Email',
+			accessor: 'email',
+			cell: ({ value }) => value || '-',
+			plugins: {
+				filter: {
+					getFilterValue(value) {
+						return value ? value.toLowerCase() : '';
+					}
+				}
+			}
 		}),
 		table.column({
 			header: 'Status',
@@ -115,21 +101,22 @@
 	const { filterValue } = pluginStates.filter;
 
 	const { selectedDataIds } = pluginStates.select;
-
-	const handleAddUser = () => {
-		goto('/users/create');
+	const sortableColumn = ['rights','status','email','cell','phone','company_name','website','full_name'] 
+	const hideableCols = ['status', 'email', 'amount'];
+	const handleAddClient = () => {
+		goto('/clients/create');
 	};
 </script>
 
 <svelte:head>
-	<title>Users</title>
+	<title>Clients</title>
 </svelte:head>
 
 <div class="w-full">
 	<div class="flex items-center justify-between py-4">
 		<Input class="max-w-sm" placeholder="Search..." type="text" bind:value={$filterValue} />
 		<div>
-			<Button on:click={handleAddUser} variant="outline" class="ml-auto">Add User</Button>
+			<Button on:click={handleAddClient} variant="outline" class="ml-auto">Add Client</Button>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="outline" class="ml-auto" builders={[builder]}>
@@ -184,11 +171,7 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row
-							{...rowAttrs}
-							data-state={$selectedDataIds[row.id] && 'selected'}
-							class="text-center"
-						>
+						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'} class='text-center'>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
@@ -196,10 +179,14 @@
 											<div class="text-right font-medium">
 												<Render of={cell.render()} />
 											</div>
-										{:else if capitalizeColumns.includes(cell.id)}
+										{:else if cell.id === 'status'}
 											<div class="capitalize">
 												<Render of={cell.render()} />
 											</div>
+										{:else if cell.id === 'website'}
+											<a class="capitalize hover:text-blue-500" href="/" target="_blank">
+												<Render of={cell.render()} />
+											</a>
 										{:else if cell.id === 'email2'}
 											<a
 												class="capitalize hover:text-blue-500"
@@ -209,9 +196,7 @@
 												<Render of={cell.render()} />
 											</a>
 										{:else}
-											<div>
-												<Render of={cell.render()} />
-											</div>
+											<Render of={cell.render()} />
 										{/if}
 									</Table.Cell>
 								</Subscribe>

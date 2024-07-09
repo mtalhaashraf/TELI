@@ -2,12 +2,20 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	export let id: string;
 
 	const handleEdit = () => {
 		goto('/users/' + id);
+	};
+
+	const handleDelete = async () => {
+		await fetch(`/api/users/${id}`, {
+			method: 'DELETE'
+		});
+
+		invalidateAll();
 	};
 </script>
 
@@ -20,5 +28,6 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Item on:click={handleEdit}>Edit User</DropdownMenu.Item>
+		<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

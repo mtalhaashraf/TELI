@@ -2,35 +2,21 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
-	import UploadFile from './upload-file.svelte';
+	import { goto, invalidateAll } from '$app/navigation';
 
-	export let id: any;
-	// console.log(id);
-	let show = false;
-
-	const handleUploadFile = () => {
-		show = true;
-	};
+	export let id: string;
 
 	const handleEdit = () => {
-		console.log(id);
-		goto('/campaigns/' + id);
+		goto('/clients/' + id);
 	};
 
 	const handleDelete = async () => {
-		await fetch(`/api/campaigns/${id}`, {
+		await fetch(`/api/clients/${id}`, {
 			method: 'DELETE'
 		});
 
 		invalidateAll();
 	};
-
-	function reloadPage() {
-		const thisPage = window.location.pathname;
-
-		goto('/').then(() => goto(thisPage));
-	}
 </script>
 
 <DropdownMenu.Root>
@@ -41,10 +27,7 @@
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
-		<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
+		<DropdownMenu.Item on:click={handleEdit}>Edit Client</DropdownMenu.Item>
 		<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
-		<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
-
-<UploadFile campaignId={id} {show} />

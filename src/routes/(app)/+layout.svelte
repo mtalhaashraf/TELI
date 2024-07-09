@@ -38,14 +38,19 @@
 			icon: AreaChart
 		},
 		{
-			name: 'Users',
-			path: '/users',
+			name: 'Clients',
+			path: '/clients',
 			icon: Users
 		},
 		{
 			name: 'Assistants',
 			path: '/assistants',
 			icon: BotMessageSquare
+		},
+		{
+			name: 'Users',
+			path: '/users',
+			icon: Users
 		},
 		{
 			name: 'Campaigns',

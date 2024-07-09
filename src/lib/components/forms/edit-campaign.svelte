@@ -59,11 +59,6 @@
 			name: 'desiredoutcome'
 		},
 		{
-			label: 'Prompt',
-			name: 'prompt',
-			type: 'textarea'
-		},
-		{
 			label: 'Description',
 			name: 'description',
 			type: 'textarea'

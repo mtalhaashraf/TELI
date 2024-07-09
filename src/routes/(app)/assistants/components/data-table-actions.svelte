@@ -1,14 +1,20 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
-
 	export let id: any;
 
 	const handleEdit = () => {
-		console.log(id);
 		goto('/assistants/' + id);
+	};
+
+	const handleDelete = async () => {
+		await fetch(`/api/assistants/${id}`, {
+			method: 'DELETE'
+		});
+
+		invalidateAll();
 	};
 </script>
 
@@ -21,5 +27,6 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
 		<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
+		<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

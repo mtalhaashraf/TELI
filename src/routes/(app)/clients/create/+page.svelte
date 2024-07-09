@@ -1,18 +1,15 @@
 <script lang="ts">
-	import EditUser from '$lib/components/forms/edit-user.svelte';
+	import AddClient from '$lib/components/forms/add-client.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { ArrowLeft } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
-
-	export let data;
-
 	function navigateHome() {
 		goto('/');
 	}
 </script>
 
 <svelte:head>
-	<title>Update User</title>
+	<title>Add Client</title>
 </svelte:head>
 <Breadcrumb.Root>
 	<Breadcrumb.List>
@@ -30,5 +27,5 @@
 	</Breadcrumb.List>
 </Breadcrumb.Root>
 <div class="flex w-full flex-col items-center">
-	<EditUser form={data.form} clients={data.clientWithIDName}/>
+	<AddClient />
 </div>

@@ -65,18 +65,12 @@
 			name: 'desiredoutcome'
 		},
 		{
-			label: 'Prompt',
-			name: 'prompt',
-			type: 'textarea'
-		},
-		{
 			label: 'Description',
 			name: 'description',
 			type: 'textarea'
 		}
 	];
 
-	$: console.log($formData, $allErrors);
 </script>
 
 <form class="mx-auto min-w-[640px]" method="POST" use:enhance>

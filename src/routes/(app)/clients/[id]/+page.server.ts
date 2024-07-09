@@ -1,28 +1,35 @@
 // src/routes/+page.server.ts
 import { editClientFormSchema } from '$lib/schemas';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms';
+import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async ({ locals: { supabase, getSession } }) => {
+export const load = async ({ locals: { supabaseServiceRole, getSession }, params }) => {
 	const { user } = await getSession();
 
 	if (!user) {
 		redirect(303, '/auth');
 	}
 
-	const { data } = await supabase.from('clients').select('*').eq('id', user.id).single();
+	const { data, error } = await supabaseServiceRole
+		.from('clients')
+		.select('*')
+		.eq('id', params.id)
+		.single();
+
+	if (error || !data) {
+		redirect(303, '/auth');
+	}
 
 	const form = await superValidate((data as any) || {}, zod(editClientFormSchema));
 
-	console.log(form);
 	return {
 		form
 	};
 };
 
 export const actions: Actions = {
-	default: async (event) => {
+	default: async (event) => {	
 		const { user } = await event.locals.getSession();
 
 		if (!user) {
@@ -35,17 +42,15 @@ export const actions: Actions = {
 			return fail(400, { form });
 		}
 
-		const { error } = await event.locals.supabase
+		const { error } = await event.locals.supabaseServiceRole
 			.from('clients')
 			.update(form.data)
-			.eq('id', user.id);
+			.eq('id', event.params.id as string);
 
 		if (error) {
 			return fail(400, { form });
 		}
 
-		return {
-			form
-		};
+		redirect(303, '/clients');
 	}
 };

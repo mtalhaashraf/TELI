@@ -15,29 +15,29 @@ export const load = async ({ fetch, data, depends, url }) => {
 		data: { session }
 	} = await supabase.auth.getSession();
 
-	const profile: Database['public']['Tables']['profiles']['Row'] | null = data.profile;
+	const client: Database['public']['Tables']['clients']['Row'] | null = data.client;
 
-	const editProfilePath = `/settings`;
-	if (profile && !_hasFullProfile(profile) && url.pathname !== editProfilePath) {
-		redirect(303, editProfilePath);
+	const editclientPath = `/settings`;
+	if (client && !_hasFullclient(client) && url.pathname !== editclientPath) {
+		redirect(303, editclientPath);
 	}
 
-	return { profile, session, supabase };
+	return { client, session, supabase };
 };
 
-export const _hasFullProfile = (
-	profile: Database['public']['Tables']['profiles']['Row'] | null
+export const _hasFullclient = (
+	client: Database['public']['Tables']['clients']['Row'] | null
 ) => {
-	if (!profile) {
+	if (!client) {
 		return false;
 	}
-	if (!profile.full_name) {
+	if (!client.full_name) {
 		return false;
 	}
-	if (!profile.company_name) {
+	if (!client.company_name) {
 		return false;
 	}
-	if (!profile.website) {
+	if (!client.website) {
 		return false;
 	}
 

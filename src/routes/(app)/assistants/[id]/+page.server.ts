@@ -1,7 +1,7 @@
 // src/routes/+page.server.ts
 import { editAssistantFormSchema } from '$lib/schemas/edit-assistant.js';
 import { assistant } from '$lib/vapi/index.js';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, json, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 

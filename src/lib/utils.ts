@@ -7,6 +7,29 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+export const toSelectOptions = (arr: string[], labelKey = 'name', valueKey = 'id') =>
+	arr.map((e) => ({ value: e.toLocaleLowerCase().replaceAll(' ', '-'), label: e }));
+
+export const evolve = (obj: any, targetKeys: [string, string][]) => {
+	let temp = {};
+	targetKeys.forEach(([to, from]) => {
+		temp = {
+			...temp,
+			[from]: obj[to]
+		};
+	});
+
+	return temp;
+};
+
+export const getValueByKey = (obj: any, key: string) => {
+	if (typeof obj == 'object') {
+		return obj[key];
+	} else {
+		return null;
+	}
+};
+
 export function formatDate(isoDateString: string) {
 	const date = new Date(isoDateString);
 	const month = String(date.getUTCMonth() + 1).padStart(2, '0');
