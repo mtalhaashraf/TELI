@@ -6,8 +6,11 @@ export const addClientFormSchema = z.object({
 	website: z.string(),
 	phone: z.string(),
 	cell: z.string(),
-	status: z.string(),
 	email: z.string(),
+	status: z.object({
+		label: z.string(),
+		value: z.string()
+	})
 });
 
 export type AddClientFormType = typeof addClientFormSchema;

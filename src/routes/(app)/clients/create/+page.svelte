@@ -4,7 +4,8 @@
 	import { ArrowLeft } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
-	console.log("accessing /clients/create");
+	export let data;
+	console.log('accessing /clients/create');
 	function navigateHome() {
 		goto('/');
 	}
@@ -29,5 +30,5 @@
 	</Breadcrumb.List>
 </Breadcrumb.Root>
 <div class="flex w-full flex-col items-center">
-	<AddClient />
+	<AddClient form={data.form} />
 </div>

@@ -9,26 +9,23 @@
 	export let form;
 	export let clients;
 
+	let loading = false;
+
 	let rights = ['Admin', 'Sales Manager', 'Sales Person'];
 	let statuses = ['Active', 'Not Active'];
 
 	const superFormData = superForm(form, {
 		validators: zodClient(addUserFormSchema),
 		dataType: 'json',
-		onSubmit: ({ action, formData, formElement, controller, submitter, cancel, jsonData }) => {
-			console.log('Submit');
+		onSubmit: () => {
+			loading = true;
 		},
-		onResult: ({ result, formEl, cancel }) => {
-			console.log('Result');
-		},
-		onUpdate: ({ form, cancel }) => {
-			console.log('Update');
-		},
-		onUpdated: ({ form }) => {
-			console.log('Upated');
+		onResult: () => {
+			loading = false;
 		},
 		onError: ({ result }) => {
-			console.log('Error');
+			console.log(result);
+			loading = false;
 		}
 	});
 
@@ -52,7 +49,7 @@
 		},
 		{
 			label: 'Clients',
-			name: 'clients',
+			name: 'client',
 			type: 'dropdown',
 			options: clients
 		},
@@ -76,12 +73,6 @@
 		{
 			label: 'Secondary Email',
 			name: 'email2'
-		},
-		{
-			label: 'Clients',
-			name: 'client',
-			type: 'dropdown',
-			options: clients
 		},
 		{
 			label: 'Rights',
@@ -135,6 +126,12 @@
 				</Form.Field>
 			{/if}
 		{/each}
-		<Form.Button>Add User</Form.Button>
+		<Form.Button disabled={loading}>
+			{#if loading}
+				Saving...
+			{:else}
+				Save
+			{/if}
+		</Form.Button>
 	</form>
 </div>

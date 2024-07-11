@@ -23,14 +23,16 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		redirect(303, '/auth');
 	}
 
-	const clientWithIDName: { label: string; value: string }[] = Clients?.map((e: any) => ({
-		value: e.id,
-		label: e.full_name
-	}));
+	const clientWithIDName: { label: string; value: string }[] | undefined = Clients?.map(
+		(e: any) => ({
+			value: e.id.toString(),
+			label: e.full_name
+		})
+	);
 
 	const client = {
-		value: _User?.client_id,
-		label: clientWithIDName?.find((e) => e.value === _User?.client_id)?.label
+		value: _User?.client_id?.toString(),
+		label: clientWithIDName?.find((e) => parseInt(e?.value) === _User?.client_id)?.label
 	};
 	const rights = {
 		value: _User?.rights,
@@ -47,6 +49,8 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		rights,
 		status
 	};
+
+	console.log(userData);
 
 	const form = await superValidate((userData as any) || {}, zod(editUserFormSchema));
 

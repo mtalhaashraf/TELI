@@ -21,7 +21,18 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		redirect(303, '/auth');
 	}
 
-	const form = await superValidate((data as any) || {}, zod(editClientFormSchema));
+	const status = {
+		value: data?.status,
+		label: data?.status
+	};
+
+	const form = await superValidate(
+		({
+			...data,
+			status
+		} as any) || {},
+		zod(editClientFormSchema)
+	);
 
 	return {
 		form
@@ -29,7 +40,7 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 };
 
 export const actions: Actions = {
-	default: async (event) => {	
+	default: async (event) => {
 		const { user } = await event.locals.getSession();
 
 		if (!user) {
@@ -44,7 +55,11 @@ export const actions: Actions = {
 
 		const { error } = await event.locals.supabaseServiceRole
 			.from('clients')
-			.update(form.data)
+			.update({
+				...form.data,
+				status: form.data.status.value,
+				updated_at: new Date().toISOString()
+			})
 			.eq('id', event.params.id as string);
 
 		if (error) {

@@ -9,11 +9,23 @@
 	export let form;
 	export let clients;
 
+	let loading = false;
+
 	let rights = ['Admin', 'Sales Manager', 'Sales Person'];
 	let statuses = ['Active', 'Not Active'];
 	const superFormData = superForm(form, {
 		validators: zodClient(editUserFormSchema),
-		dataType: 'json'
+		dataType: 'json',
+		onSubmit: () => {
+			loading = true;
+		},
+		onResult: () => {
+			loading = false;
+		},
+		onError: ({ result }) => {
+			console.log(result);
+			loading = false;
+		}
 	});
 
 	const { form: formData, enhance } = superFormData;
@@ -28,6 +40,8 @@
 			label: string;
 		}[];
 	}
+
+	$: console.log($formData);
 
 	const fields: Field[] = [
 		{
@@ -110,6 +124,12 @@
 				</Form.Field>
 			{/if}
 		{/each}
-		<Form.Button>Save</Form.Button>
+		<Form.Button disabled={loading}>
+			{#if loading}
+				Updating...
+			{:else}
+				Update
+			{/if}
+		</Form.Button>
 	</form>
 </div>

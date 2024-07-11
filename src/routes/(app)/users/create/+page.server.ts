@@ -17,7 +17,7 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 
 	return {
 		form,
-		clients: clients?.map((e) => ({ value: e.id, label: e.full_name }))
+		clients: clients?.map((e) => ({ value: e.id.toString(), label: e.full_name }))
 	};
 };
 
@@ -67,7 +67,7 @@ export const actions: Actions = {
 			.update({
 				avatar_url: null,
 				cell: form.data.cell,
-				client_id: form.data.client.value,
+				client_id: parseInt(form.data.client.value),
 				email2: form.data.email2,
 				rights: form.data.rights.value,
 				full_name: form.data.full_name,
