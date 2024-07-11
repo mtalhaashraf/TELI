@@ -3,6 +3,8 @@
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 	import { ArrowLeft } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+
+	console.log("accessing /clients/create");
 	function navigateHome() {
 		goto('/');
 	}

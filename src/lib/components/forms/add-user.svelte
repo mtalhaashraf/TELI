@@ -14,10 +14,25 @@
 
 	const superFormData = superForm(form, {
 		validators: zodClient(addUserFormSchema),
-		dataType: 'json'
+		dataType: 'json',
+		onSubmit: ({ action, formData, formElement, controller, submitter, cancel, jsonData }) => {
+			console.log('Submit');
+		},
+		onResult: ({ result, formEl, cancel }) => {
+			console.log('Result');
+		},
+		onUpdate: ({ form, cancel }) => {
+			console.log('Update');
+		},
+		onUpdated: ({ form }) => {
+			console.log('Upated');
+		},
+		onError: ({ result }) => {
+			console.log('Error');
+		}
 	});
 
-	const { form: formData, enhance } = superFormData;
+	const { form: formData, enhance, errors } = superFormData;
 
 	interface Field {
 		label: string;
@@ -34,6 +49,12 @@
 		{
 			label: 'Name',
 			name: 'full_name'
+		},
+		{
+			label: 'Clients',
+			name: 'clients',
+			type: 'dropdown',
+			options: clients
 		},
 		{
 			label: 'Company Email',

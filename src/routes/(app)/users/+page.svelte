@@ -23,7 +23,7 @@
 
 	const { users } = data;
 
-	const table = createTable(readable(users as unknown as User[]), {
+	const table = createTable(readable(users as User[]), {
 		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
@@ -178,7 +178,7 @@
 								</Subscribe>
 							{/each}
 						</Table.Row>
-					</Subscribe>
+					</Subscribe> 
 				{/each}
 			</Table.Header>
 			<Table.Body {...$tableBodyAttrs}>

@@ -43,7 +43,6 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		assistants: assistants.map((e: any) => ({
 			id: e.id,
 			name: e.name,
-			firstMessage: e.firstMessage
 		}))
 	};
 };

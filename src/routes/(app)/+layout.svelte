@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import AreaChart from 'lucide-svelte/icons/area-chart';
@@ -18,8 +18,7 @@
 	onMount(() => {
 		const observer = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
-				invalidate('supabase:auth');
-			} else {
+				('supabase:auth');
 			}
 		});
 

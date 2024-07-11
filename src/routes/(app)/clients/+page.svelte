@@ -62,6 +62,12 @@
 			header: 'Email',
 			accessor: 'email',
 			cell: ({ value }) => value || '-',
+			
+		}),
+		table.column({
+			header: 'Status',
+			accessor: 'status',
+			cell: ({ value }) => value || '-',
 			plugins: {
 				filter: {
 					getFilterValue(value) {
@@ -69,11 +75,6 @@
 					}
 				}
 			}
-		}),
-		table.column({
-			header: 'Status',
-			accessor: 'status',
-			cell: ({ value }) => value || '-'
 		}),
 		table.column({
 			header: '',
@@ -104,6 +105,7 @@
 	const sortableColumn = ['rights','status','email','cell','phone','company_name','website','full_name'] 
 	const hideableCols = ['status', 'email', 'amount'];
 	const handleAddClient = () => {
+		console.log('Navigating to /clients/create');
 		goto('/clients/create');
 	};
 </script>
@@ -173,7 +175,7 @@
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
 						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'} class='text-center'>
 							{#each row.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} let:attrs>
+								<Subscribe attrs={cell.attrs()} let:attrs >
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
 										{#if cell.id === 'amount'}
 											<div class="text-right font-medium">

@@ -1,6 +1,6 @@
 // src/routes/+page.server.ts
 import { addUserFormSchema } from '$lib/schemas';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, json, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -23,6 +23,7 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 
 export const actions: Actions = {
 	default: async (event) => {
+		console.log('Event Triggered');
 		const { user } = await event.locals.getSession();
 
 		if (!user) {
@@ -37,27 +38,43 @@ export const actions: Actions = {
 			});
 		}
 
-		console.log('Insert user: ', form.data);
-
-		const authUser = {
-			email: form.data.company_email,
-			password: form.data.password
-		};
-
-		const { error: createUserError } =
-			await event.locals.supabaseServiceRole.auth.admin.createUser(authUser);
-
-		const { error: insertError } = await event.locals.supabaseServiceRole.from('users').insert({
+		console.log('Insert user: ', {
 			avatar_url: null,
 			cell: form.data.cell,
 			client_id: form.data.client.value,
-			company_email: form.data.company_email,
 			email2: form.data.email2,
 			rights: form.data.rights.value,
 			full_name: form.data.full_name,
 			phone: form.data.phone,
 			status: form.data.status.value
 		});
+
+		const authUser = {
+			email: form.data.company_email,
+			password: form.data.password
+		};
+
+		const { error: createUserError, data: authUserData } =
+			await event.locals.supabaseServiceRole.auth.admin.createUser(authUser);
+
+		if (createUserError) {
+			console.log(createUserError);
+			return fail(400, { form });
+		}
+
+		const { error: insertError } = await event.locals.supabaseServiceRole
+			.from('users')
+			.update({
+				avatar_url: null,
+				cell: form.data.cell,
+				client_id: form.data.client.value,
+				email2: form.data.email2,
+				rights: form.data.rights.value,
+				full_name: form.data.full_name,
+				phone: form.data.phone,
+				status: form.data.status.value
+			})
+			.eq('id', authUserData?.user.id);
 
 		if (createUserError || insertError) {
 			console.log(createUserError || insertError);

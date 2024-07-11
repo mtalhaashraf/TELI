@@ -9,6 +9,7 @@
 	import {
 		addHiddenColumns,
 		addPagination,
+		addSelectedRows,
 		addSortBy,
 		addTableFilter
 	} from 'svelte-headless-table/plugins';
@@ -21,11 +22,12 @@
 	const { assistants } = data;
 
 	const table = createTable(readable(assistants as Assistant[]), {
-		sort: addSortBy(),
+		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
 			fn: ({ filterValue, value }) => value.includes(filterValue)
 		}),
+		select: addSelectedRows(),
 		hide: addHiddenColumns()
 	});
 
@@ -38,7 +40,14 @@
 		table.column({
 			header: 'First Message',
 			accessor: 'firstMessage',
-			cell: ({ value }) => value || '-'
+			cell: ({ value }) => value || '-',
+			plugins: {
+				filter: {
+					getFilterValue(value) {
+						return value ? value.toLowerCase() : '';
+					}
+				}
+			}
 		}),
 		table.column({
 			header: 'System Prompt',
@@ -131,7 +140,7 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs}>
+						<Table.Row {...rowAttrs} class="text-center">
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>

@@ -36,30 +36,22 @@
 	});
 
 	let columns = table.createColumns([
-		table.column({
-			header: 'Campaign Status',
-			accessor: 'status',
-			cell: () => {
-				return createRender(Switch);
-			},
-			plugins: {
-				sort: {
-					disable: true
-				}
-			}
-		}),
+		// table.column({
+		// 	header: 'Campaign Status',
+		// 	accessor: 'status',
+		// 	cell: () => {
+		// 		return createRender(Switch);
+		// 	},
+		// 	plugins: {
+		// 		sort: {
+		// 			disable: true
+		// 		}
+		// 	}
+		// }),
 		table.column({
 			header: 'Name',
 			accessor: 'campaignname',
 			cell: ({ value }) => value || '-',
-			plugins: {
-				sort: {
-					disable: true
-				},
-				filter: {
-					exclude: true
-				}
-			}
 		}),
 		table.column({
 			header: 'Assistant',
@@ -84,14 +76,22 @@
 		table.column({
 			header: 'End Date',
 			accessor: 'enddate',
-			cell: ({ value }) => formatDate(value || '')
+			cell: ({ value }) => formatDate(value || ''),
+			plugins: {
+				filter: {
+					getFilterValue(value) {
+						return value ? value.toLowerCase() : '';
+					}
+				}
+			}
 		}),
 
 		table.column({
 			header: 'Actions',
-			accessor: 'campaignid',
-			cell: (item) => {
-				return createRender(Actions, { id: item.value });
+			accessor: (item: Campaign) => ({ campaignid: item.campaignid, clientid: item.clientid }),
+			cell: ({ value }) => {
+				const { campaignid, clientid } = value as { campaignid: number, clientid: number };
+				return createRender(Actions, { id: campaignid, clientid });
 			},
 			plugins: {
 				sort: {
@@ -99,6 +99,7 @@
 				}
 			}
 		})
+	
 	]);
 
 	let { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
@@ -116,7 +117,7 @@
 
 	let { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	let { filterValue } = pluginStates.filter;
-
+    const sortableCells = ['campaignname', 'assistant', 'desiredoutcome', 'description', 'startdate', 'enddate']
 	let { selectedDataIds } = pluginStates.select;
 	const sortableColumn = ['campaignname','assistant','desiredoutcome','description']
 	const handleAddCampaign = () => {

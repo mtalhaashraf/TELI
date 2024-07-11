@@ -8,7 +8,6 @@ export const load = async ({ locals: { supabase, getSession } }) => {
 	}
 
 	const { data: client } = await supabase.from('clients').select(`*`).eq('id', user?.id).single();
-
 	return {
 		client,
 		session

@@ -7,7 +7,7 @@ export interface User {
 	rights: string | null;
 	endtime: string | null;
 	full_name: string | null;
-	id: string;
+	id: string | null;
 	phone: string | null;
 	status: string | null;
 	updated_at: string | null;

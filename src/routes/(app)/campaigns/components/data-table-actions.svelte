@@ -5,12 +5,14 @@
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import UploadFile from './upload-file.svelte';
 
+	export let clientid: any;
 	export let id: any;
-	// console.log(id);
-	let show = false;
+	// console.log(id, clientid);
+	// let show = false;
 
 	const handleUploadFile = () => {
-		show = true;
+		const url = `https://telibot-vapi.azurewebsites.net/?clientid=${clientid}&id=${id}`;
+		window.open(url, '_blank');
 	};
 
 	const handleEdit = () => {
@@ -47,4 +49,4 @@
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<UploadFile campaignId={id} {show} />
+<!-- <UploadFile campaignId={id} {show} /> -->

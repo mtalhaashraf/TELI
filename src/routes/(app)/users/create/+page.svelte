@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import AddUser from '$lib/components/forms/add-user.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { ArrowLeft } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
 
 	export let data;
 

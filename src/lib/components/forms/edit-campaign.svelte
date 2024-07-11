@@ -8,7 +8,6 @@
 	import * as Select from '../ui/select';
 
 	export let form;
-
 	export let assistants;
 
 	const superFormData = superForm(form, {
