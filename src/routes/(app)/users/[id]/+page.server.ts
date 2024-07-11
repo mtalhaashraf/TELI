@@ -23,7 +23,7 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		redirect(303, '/auth');
 	}
 
-	const clientWithIDName = Clients?.map((e: any) => ({
+	const clientWithIDName: { label: string; value: string }[] = Clients?.map((e: any) => ({
 		value: e.id,
 		label: e.full_name
 	}));
@@ -79,7 +79,7 @@ export const actions: Actions = {
 			.update({
 				avatar_url: null,
 				cell: form.data.cell,
-				client_id: form.data.client.value,
+				client_id: parseInt(form.data.client.value),
 				company_email: form.data.company_email,
 				email2: form.data.email2,
 				rights: form.data.rights.value,

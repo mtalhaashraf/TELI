@@ -20,9 +20,8 @@ export const actions: Actions = {
 			});
 		}
 
-		
 		console.log('Insert client: ', form.data);
-		
+
 		const { error } = await event.locals.supabaseServiceRole.from('clients').insert(form.data);
 
 		if (error) {

@@ -13,7 +13,7 @@
 		"generate:types": "npx supabase gen types typescript --project-id 'iqxbpwjtzqpnwmiiwwke' --schema public > src/types/supabase.ts"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-auto": "^3.2.2",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tailwindcss/typography": "^0.5.13",

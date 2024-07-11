@@ -5,7 +5,6 @@
 	import { superForm, type FormPath, type Infer } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
-	import { toSelectOptions } from '$lib/utils';
 
 	export let form;
 	export let clients;

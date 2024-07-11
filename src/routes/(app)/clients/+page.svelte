@@ -23,7 +23,7 @@
 
 	const { clients } = data;
 
-	const table = createTable(readable(clients as Client[]), {
+	const table = createTable(readable(clients as unknown as Client[]), {
 		sort: addSortBy({ disableMultiSort: true }),
 		page: addPagination(),
 		filter: addTableFilter({
@@ -61,8 +61,7 @@
 		table.column({
 			header: 'Email',
 			accessor: 'email',
-			cell: ({ value }) => value || '-',
-			
+			cell: ({ value }) => value || '-'
 		}),
 		table.column({
 			header: 'Status',
@@ -102,7 +101,16 @@
 	const { filterValue } = pluginStates.filter;
 
 	const { selectedDataIds } = pluginStates.select;
-	const sortableColumn = ['rights','status','email','cell','phone','company_name','website','full_name'] 
+	const sortableColumn = [
+		'rights',
+		'status',
+		'email',
+		'cell',
+		'phone',
+		'company_name',
+		'website',
+		'full_name'
+	];
 	const hideableCols = ['status', 'email', 'amount'];
 	const handleAddClient = () => {
 		console.log('Navigating to /clients/create');
@@ -173,9 +181,13 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'} class='text-center'>
+						<Table.Row
+							{...rowAttrs}
+							data-state={$selectedDataIds[row.id] && 'selected'}
+							class="text-center"
+						>
 							{#each row.cells as cell (cell.id)}
-								<Subscribe attrs={cell.attrs()} let:attrs >
+								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
 										{#if cell.id === 'amount'}
 											<div class="text-right font-medium">
@@ -186,7 +198,7 @@
 												<Render of={cell.render()} />
 											</div>
 										{:else if cell.id === 'website'}
-											<a class="capitalize hover:text-blue-500" href="/" target="_blank">
+											<a class="hover:text-blue-500" href="/" target="_blank">
 												<Render of={cell.render()} />
 											</a>
 										{:else if cell.id === 'email2'}

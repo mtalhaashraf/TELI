@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import EditUser from '$lib/components/forms/edit-user.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { ArrowLeft } from 'lucide-svelte';
-	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -30,5 +29,5 @@
 	</Breadcrumb.List>
 </Breadcrumb.Root>
 <div class="flex w-full flex-col items-center">
-	<EditUser form={data.form} clients={data.clientWithIDName}/>
+	<EditUser form={data.form} clients={data.clientWithIDName} />
 </div>
