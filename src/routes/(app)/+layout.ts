@@ -11,9 +11,7 @@ export const load = async ({ fetch, data, depends, url }) => {
 		serverSession: data.session
 	});
 
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
+	const {data: { session }} = await supabase.auth.getSession();
 
 	const client: Database['public']['Tables']['clients']['Row'] | null = data.client;
 

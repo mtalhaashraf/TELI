@@ -41,7 +41,7 @@
 		}[];
 	}
 
-	$: console.log($formData);
+	// $: console.log($formData);
 
 	const fields: Field[] = [
 		{

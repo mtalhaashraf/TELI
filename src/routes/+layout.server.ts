@@ -5,6 +5,6 @@ export const load = async ({ locals: { getSession } }) => {
 
 	return {
 		session,
-		user
+		user,
 	};
 };

@@ -8,12 +8,13 @@
 	import Settings from 'lucide-svelte/icons/settings';
 	import ShieldAlert from 'lucide-svelte/icons/shield-alert';
 	import Users from 'lucide-svelte/icons/users';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let data;
 
-	let { supabase, session } = data;
+	let { supabase, session} = data;
 	$: ({ supabase, session } = data);
+
 
 	onMount(() => {
 		const observer = supabase.auth.onAuthStateChange((event, _session) => {
@@ -24,12 +25,12 @@
 
 		return () => observer.data.subscription.unsubscribe();
 	});
-
+	
 	const handleLogout = async () => {
 		await supabase.auth.signOut();
 		goto('/auth');
 	};
-
+	
 	const menuItems = [
 		{
 			name: 'Statistics',
@@ -67,6 +68,22 @@
 			icon: Settings
 		}
 	];
+
+
+	let permissions = {};
+
+	const unsubscribe = permissionsStore.subscribe(value => {
+		permissions = value;
+	});
+	
+	onDestroy(() => {
+		unsubscribe();
+	});
+	
+	console.log('Permissions updated:', permissions?.page);
+	// console.log('Permissions:', permissions);
+	$: filteredMenuItems = menuItems.filter(item =>permissions.page[item.name]);
+	// console.log('Filtered Menu Items:', filteredMenuItems);
 </script>
 
 <div class="box-border h-screen w-screen">
@@ -77,7 +94,7 @@
 	<div class="flex h-[calc(100vh-75px)]">
 		<div class=" border-r p-2">
 			<div class="flex flex-col gap-1">
-				{#each menuItems as { name, path, icon } (name)}
+				{#each filteredMenuItems as { name, path, icon } (name)}
 					<a
 						class="flex items-center gap-2 rounded-sm p-2 hover:bg-slate-900 hover:text-white {$page
 							.url.pathname == path && 'bg-slate-900 text-white'}"

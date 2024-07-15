@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import { createClient } from '@supabase/supabase-js';
 import type { Handle } from '@sveltejs/kit';
 
-export const handle: Handle = async ({ event, resolve }) => {
+export const handle: Handle = async ({event, resolve }) => {
 	event.locals.supabase = createSupabaseServerClient({
 		supabaseUrl: PUBLIC_SUPABASE_URL,
 		supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
@@ -15,6 +15,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 		auth: { persistSession: false }
 	});
 
+
+
+
 	event.locals.getSession = async () => {
 		const {
 			data: { session }
@@ -23,16 +26,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return { session: null, user: null };
 		}
 
-		const {
-			data: { user },
-			error
-		} = await event.locals.supabase.auth.getUser();
-		if (error) {
-			// JWT validation has failed
-			return { session: null, user: null };
+		const { data: { user }, error } = await event.locals.supabase.auth.getUser();
+		if (error || !user) {
+			return { session, user: null};
 		}
 
-		return { session, user };
+		return { session, user};
 	};
 
 	return resolve(
