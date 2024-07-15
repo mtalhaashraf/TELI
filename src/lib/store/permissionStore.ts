@@ -1,4 +1,5 @@
-let AdminPermission = {
+export const Permissions = {
+AdminPermission : {
     page:{
     Statistics : true,
     Clients : true,
@@ -32,8 +33,8 @@ let AdminPermission = {
     }
     
 
-}
-let SaleManagerPermission = {
+},
+SaleManagerPermission : {
     page:{
     statistics : true,
     clients : false,
@@ -65,8 +66,8 @@ let SaleManagerPermission = {
             delete: false
         }
     },
-}
-let SalePersonPermission = {
+},
+SalePersonPermission : {
     page:{
     statistics : true,
     clients : false,
@@ -87,3 +88,6 @@ let SalePersonPermission = {
         }
     }
 }
+
+}
+

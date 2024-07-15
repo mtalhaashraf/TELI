@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-
+import {Permissions} from '$lib/store/permissionStore'
 export const load = async ({ locals: { supabase, getSession, supabaseServiceRole } }) => {
 	const { user, session } = await getSession();
 
@@ -21,13 +21,15 @@ export const load = async ({ locals: { supabase, getSession, supabaseServiceRole
 
 			let permissions: {};
 			if (userRole === 'Admin') {
-				permissions = AdminPermission;
+				permissions = Permissions.AdminPermission;
 			} else if (userRole === 'Sales Manager') {
-				permissions = SaleManagerPermission;
+				permissions = Permissions.SaleManagerPermission;
 			} else if (userRole === 'Sales Person') {
-				permissions = SalePersonPermission;
+				permissions = Permissions.SalePersonPermission;
 			}
 
+			console.log(permissions)
+			
 	const { data: client } = await supabase.from('clients').select(`*`).eq('id', user?.id).single();
 	return {
 		client,

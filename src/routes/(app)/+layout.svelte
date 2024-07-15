@@ -12,9 +12,8 @@
 
 	export let data;
 
-	let { supabase, session} = data;
-	$: ({ supabase, session } = data);
-
+	let { supabase, session, permissions} = data;
+	$: ({ supabase, session, permissions } = data);
 
 	onMount(() => {
 		const observer = supabase.auth.onAuthStateChange((event, _session) => {
@@ -70,20 +69,10 @@
 	];
 
 
-	let permissions = {};
 
-	const unsubscribe = permissionsStore.subscribe(value => {
-		permissions = value;
-	});
-	
-	onDestroy(() => {
-		unsubscribe();
-	});
-	
-	console.log('Permissions updated:', permissions?.page);
-	// console.log('Permissions:', permissions);
-	$: filteredMenuItems = menuItems.filter(item =>permissions.page[item.name]);
-	// console.log('Filtered Menu Items:', filteredMenuItems);
+
+	const filteredMenuItems = menuItems.filter(item =>permissions.page[item.name]);
+	// console.log(filteredMenuItems)
 </script>
 
 <div class="box-border h-screen w-screen">

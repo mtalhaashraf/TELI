@@ -20,7 +20,9 @@ export const load = async ({ fetch, data, depends, url }) => {
 		redirect(303, editclientPath);
 	}
 
-	return { client, session, supabase };
+	const permissions = data.permissions;
+
+	return { client, session, supabase, permissions };
 };
 
 export const _hasFullclient = (
