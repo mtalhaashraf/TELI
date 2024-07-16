@@ -1,13 +1,13 @@
 export const Permissions = {
 AdminPermission : {
     page:{
-    Statistics : true,
-    Clients : true,
-    Assistants : true,
-    Users : true,
-    Campaigns : true,
-    Billing : true,
-    Settings : true	
+    statistics : true,
+    clients : true,
+    assistants : true,
+    users : true,
+    campaigns : true,
+    billing : true,
+    settings : true	
     },
     components:{
         clients:{
@@ -73,9 +73,9 @@ SalePersonPermission : {
     clients : false,
     assistants : false,
     users : true,
-    campaign : true,
+    campaigns : true,
     billing : false,
-    setting : false	
+    settings : false	
     },
     components:{
         users:{

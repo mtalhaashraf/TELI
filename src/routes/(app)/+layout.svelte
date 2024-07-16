@@ -68,11 +68,10 @@
 		}
 	];
 
-
-
-
-	const filteredMenuItems = menuItems.filter(item =>permissions.page[item.name]);
-	// console.log(filteredMenuItems)
+		console.log(permissions);
+		
+	const filteredMenuItems = menuItems.filter(item => permissions.page[item.name.toLowerCase()]);
+	$: console.log('Filtered Menu Items:', filteredMenuItems);
 </script>
 
 <div class="box-border h-screen w-screen">
