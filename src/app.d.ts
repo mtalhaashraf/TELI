@@ -1,5 +1,6 @@
 import { SupabaseClient, Session, type User } from '@supabase/supabase-js';
 import { Database } from './types/supabase';
+import type { RightPermissions } from './types/right-permissions.type';
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -12,7 +13,7 @@ declare global {
 		interface PageData {
 			supabase: SupabaseClient<Database>;
 			session: Session | null;
-			profile: Database.public.profiles.Row;
+			permissions: RightPermissions
 		}
 		// interface Error {}
 		// interface Platform {}

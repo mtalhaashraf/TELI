@@ -2,6 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Database } from '../../types/supabase';
 import { createSupabaseLoadClient } from '@supabase/auth-helpers-sveltekit';
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
+import type { RightPermissions } from '../../types/right-permissions.type';
 
 export const load = async ({ fetch, data, depends, url }) => {
 	const supabase = createSupabaseLoadClient({
@@ -11,35 +12,20 @@ export const load = async ({ fetch, data, depends, url }) => {
 		serverSession: data.session
 	});
 
-	const {data: { session }} = await supabase.auth.getSession();
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
 
-	const client: Database['public']['Tables']['clients']['Row'] | null = data.client;
+	// Protect routes
+	const path = (url.pathname as string)?.replace('/', '');
 
-	const editclientPath = `/settings`;
-	if (client && !_hasFullclient(client) && url.pathname !== editclientPath) {
-		redirect(303, editclientPath);
+	console.log('------------------------------ ', path.split('/')[0]);
+
+	const defaultPath = '/statistics';
+
+	if (!(data.permissions as RightPermissions)[path.split('/')[0]]) {
+		redirect(303, defaultPath);
 	}
 
-	const permissions = data.permissions;
-
-	return { client, session, supabase, permissions };
-};
-
-export const _hasFullclient = (
-	client: Database['public']['Tables']['clients']['Row'] | null
-) => {
-	if (!client) {
-		return false;
-	}
-	if (!client.full_name) {
-		return false;
-	}
-	if (!client.company_name) {
-		return false;
-	}
-	if (!client.website) {
-		return false;
-	}
-
-	return true;
+	return { session, supabase, permissions: data.permissions as RightPermissions };
 };

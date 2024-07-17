@@ -5,6 +5,7 @@
 	import { superForm, type FormPath, type Infer } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
+	import { page } from '$app/stores';
 
 	export let form;
 	export let clients;
@@ -51,7 +52,8 @@
 			label: 'Clients',
 			name: 'client',
 			type: 'dropdown',
-			options: clients
+			options: clients,
+			readonly: !$page.data.permissions.users?.actions?.add?.client
 		},
 		{
 			label: 'Company Email',
@@ -78,6 +80,7 @@
 			label: 'Rights',
 			name: 'rights',
 			type: 'dropdown',
+			readonly: !$page.data.permissions.users?.actions?.add?.rights,
 			options: rights.map((e) => ({
 				value: e,
 				label: e
@@ -87,6 +90,7 @@
 			label: 'Status',
 			name: 'status',
 			type: 'dropdown',
+			readonly: !$page.data.permissions.users?.actions?.add?.status,
 			options: statuses.map((e) => ({
 				value: e,
 				label: e
@@ -102,7 +106,7 @@
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Select.Root bind:selected={$formData[name]}>
+						<Select.Root disabled={readonly} bind:selected={$formData[name]}>
 							<Select.Trigger {...attrs}>
 								<Select.Value placeholder="Select one" />
 							</Select.Trigger>

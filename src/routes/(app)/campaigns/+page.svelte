@@ -21,8 +21,8 @@
 	import { goto } from '$app/navigation';
 
 	export let data;
-
-	let { campaigns } = data;
+	console.log(data.permissions.components.campaigns.add)
+	let { campaigns, permissions } = data;
 	$: ({ campaigns } = data);
 
 	let table = createTable(readable(campaigns as Campaign[]), {
@@ -88,10 +88,10 @@
 
 		table.column({
 			header: 'Actions',
-			accessor: (item: Campaign) => ({ campaignid: item.campaignid, clientid: item.clientid }),
+			accessor: (item: Campaign) => ({ campaignid: item.campaignid, clientid: item.clientid, permissions }),
 			cell: ({ value }) => {
 				const { campaignid, clientid } = value as { campaignid: number, clientid: number };
-				return createRender(Actions, { id: campaignid, clientid });
+				return createRender(Actions, { id: campaignid, clientid, permissions });
 			},
 			plugins: {
 				sort: {
@@ -120,9 +120,12 @@
     const sortableCells = ['campaignname', 'assistant', 'desiredoutcome', 'description', 'startdate', 'enddate']
 	let { selectedDataIds } = pluginStates.select;
 	const sortableColumn = ['campaignname','assistant','desiredoutcome','description']
-	const handleAddCampaign = () => {
+
+		const handleAddCampaign = () => {
 		goto('/campaigns/create');
 	};
+
+	
 </script>
 
 <svelte:head>
@@ -131,7 +134,9 @@
 <div class="w-full">
 	<div class="flex items-center py-4">
 		<Input class="max-w-sm" placeholder="Search..." type="text" bind:value={$filterValue} />
-		<Button on:click={handleAddCampaign} variant="outline" class="ml-auto">Add Campaign</Button>
+		{#if permissions.components.campaigns.add}
+		<Button  on:click={handleAddCampaign} variant="outline" class="ml-auto">Add Campaign</Button>			
+		{/if}
 	</div>
 	<div class="rounded-md border">
 		<Table.Root {...$tableAttrs}>

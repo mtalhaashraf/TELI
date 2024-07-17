@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
-import {Permissions} from '$lib/store/permissionStore'
+import { Rights, type RightPermissions } from '../../types/right-permissions.type';
+import { admin_permissions, default_permissions, sales_manager_permissions, sales_person_permissions } from '$lib/permissions';
 export const load = async ({ locals: { supabase, getSession, supabaseServiceRole } }) => {
 	const { user, session } = await getSession();
 
@@ -7,33 +8,49 @@ export const load = async ({ locals: { supabase, getSession, supabaseServiceRole
 		redirect(303, '/auth');
 	}
 
-	const { data: roleData, error: roleError } = await supabaseServiceRole
+	const { data, error } = await supabaseServiceRole
 		.from('users')
 		.select('*')
 		.eq('id', user.id)
 		.single();
 		
-		if (roleError || !roleData) {
+		if (error || !data) {
 			return { session, user, permissions: null };
 		}
-		const userRole = roleData.rights;
-        // console.log('User Role:', userRole);
-
-			let permissions: {};
-			if (userRole === 'Admin') {
-				permissions = Permissions.AdminPermission;
-			} else if (userRole === 'Sales Manager') {
-				permissions = Permissions.SaleManagerPermission;
-			} else if (userRole === 'Sales Person') {
-				permissions = Permissions.SalePersonPermission;
+		const rights = data.rights;
+			let permissions: RightPermissions;
+			if (rights === Rights.ADMIN) {
+				permissions = admin_permissions;
+			} else if (rights === Rights.SALES_MANAGER) {
+				permissions = {
+					...sales_manager_permissions,
+					users:{
+						...sales_manager_permissions.users,
+						client:data.client_id
+					},
+					campaigns:{
+						...sales_manager_permissions.campaigns,
+						client:data.client_id
+					}
+				};
+			} else if (rights === Rights.SALES_PERSON) {
+				permissions = {
+					...sales_person_permissions,
+					campaigns:{
+						client:data.client_id
+					}
+				};
+			}else{
+				permissions = default_permissions
 			}
-
-			console.log(permissions)
 			
-	const { data: client } = await supabase.from('clients').select(`*`).eq('id', user?.id).single();
+	// const { data: client } = await supabase.from('clients').select(`*`).eq('id', user?.id).single();
 	return {
-		client,
+		// client,
+		
 		session,
 		permissions
 	};
 };
+
+

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -6,7 +7,7 @@
 	import { cn } from '$lib/utils.js';
 	import ArrowUpDown from 'lucide-svelte/icons/arrow-up-down';
 	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
+	import { Column, Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
 	import {
 		addHiddenColumns,
 		addPagination,
@@ -15,13 +16,109 @@
 		addTableFilter
 	} from 'svelte-headless-table/plugins';
 	import { readable } from 'svelte/store';
-	import Actions from './components/data-table-actions.svelte';
 	import type { User } from '../../../types/user.type';
-	import { goto } from '$app/navigation';
+	import Actions from './components/data-table-actions.svelte';
 
 	export let data;
 
-	const { users } = data;
+	const { users, permissions } = data;
+
+	const getColumns = () => {
+		if (permissions.users?.actions) {
+			return table.createColumns([
+				table.column({
+					header: 'Name',
+					accessor: 'full_name',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Client',
+					accessor: 'client',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Company Email',
+					accessor: 'company_email',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Phone',
+					accessor: 'phone',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Cell',
+					accessor: 'cell',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Secondary Email',
+					accessor: 'email2',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Rights',
+					accessor: 'rights',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Status',
+					accessor: 'status',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: '',
+					accessor: ({ id }) => id,
+					cell: (item) => {
+						return createRender(Actions, { id: item.value });
+					}
+				})
+			]);
+		} else {
+			return table.createColumns([
+				table.column({
+					header: 'Name',
+					accessor: 'full_name',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Client',
+					accessor: 'client',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Company Email',
+					accessor: 'company_email',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Phone',
+					accessor: 'phone',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Cell',
+					accessor: 'cell',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Secondary Email',
+					accessor: 'email2',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Rights',
+					accessor: 'rights',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Status',
+					accessor: 'status',
+					cell: ({ value }) => value || '-'
+				})
+			]);
+		}
+	};
 
 	const table = createTable(readable(users as User[]), {
 		sort: addSortBy({ disableMultiSort: true }),
@@ -99,7 +196,7 @@
 	]);
 
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
-		table.createViewModel(columns);
+		table.createViewModel(getColumns());
 
 	const { sortKeys } = pluginStates.sort;
 
@@ -129,7 +226,9 @@
 	<div class="flex items-center justify-between py-4">
 		<Input class="max-w-sm" placeholder="Search..." type="text" bind:value={$filterValue} />
 		<div>
-			<Button on:click={handleAddUser} variant="outline" class="ml-auto">Add User</Button>
+			{#if data.permissions.users?.actions?.add}
+				<Button on:click={handleAddUser} variant="outline" class="ml-auto">Add User</Button>
+			{/if}
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild let:builder>
 					<Button variant="outline" class="ml-auto" builders={[builder]}>
@@ -178,7 +277,7 @@
 								</Subscribe>
 							{/each}
 						</Table.Row>
-					</Subscribe> 
+					</Subscribe>
 				{/each}
 			</Table.Header>
 			<Table.Body {...$tableBodyAttrs}>

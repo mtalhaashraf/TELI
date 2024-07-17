@@ -4,7 +4,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import UploadFile from './upload-file.svelte';
-
+	
+	export let permissions: any;
 	export let clientid: any;
 	export let id: any;
 	// console.log(id, clientid);
@@ -43,8 +44,12 @@
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
-		<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
-		<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
+		{#if permissions.components.campaigns.update}
+			<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
+		{/if}
+		{#if permissions.components.campaigns.delete}
+			<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
+		{/if}
 		<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

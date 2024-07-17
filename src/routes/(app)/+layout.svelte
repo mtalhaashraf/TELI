@@ -68,15 +68,17 @@
 		}
 	];
 
-		console.log(permissions);
+		// console.log(permissions);
 		
-	const filteredMenuItems = menuItems.filter(item => permissions.page[item.name.toLowerCase()]);
-	$: console.log('Filtered Menu Items:', filteredMenuItems);
+	const filteredMenuItems = menuItems.filter(item => {
+		return permissions[item.name.toLowerCase()]		
+	});
 </script>
 
 <div class="box-border h-screen w-screen">
 	<div class="flex h-[75px] items-center justify-between border-b px-6 py-2">
 		<span class="mb-4 text-3xl font-extrabold text-slate-900">Teli</span>
+		<p>{data.session.user.email}</p>
 		<Button on:click={handleLogout}>Logout</Button>
 	</div>
 	<div class="flex h-[calc(100vh-75px)]">
