@@ -73,7 +73,8 @@
 			options: statuses.map((e) => ({
 				value: e,
 				label: e
-			}))
+			})),
+			show: !$page.data.permissions.settings?.profile?.actions?.status
 		}
 	];
 
