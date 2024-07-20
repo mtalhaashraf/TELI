@@ -12,7 +12,7 @@
 
 	export let data;
 
-	let { supabase, session, permissions } = data;
+	let { supabase, session, permissions} = data;
 	$: ({ supabase, session, permissions } = data);
 
 	onMount(() => {
@@ -24,16 +24,16 @@
 
 		return () => observer.data.subscription.unsubscribe();
 	});
-
+	
 	const handleLogout = async () => {
 		await supabase.auth.signOut();
 		goto('/auth');
 	};
-
+	
 	const menuItems = [
 		{
 			name: 'Statistics',
-			path: '/',
+			path: '/statistics',
 			icon: AreaChart
 		},
 		{
@@ -68,10 +68,10 @@
 		}
 	];
 
-	// console.log(permissions);
-
-	const filteredMenuItems = menuItems.filter((item) => {
-		return permissions[item.name.toLowerCase()];
+		// console.log(permissions);
+		
+	const filteredMenuItems = menuItems.filter(item => {
+		return permissions[item.name.toLowerCase()]		
 	});
 </script>
 

@@ -7,7 +7,7 @@ import { loginFormSchema } from '$lib/schemas';
 export const load = async ({ locals: { getSession } }) => {
 	const { user, session } = await getSession();
 	if (user || session) {
-		redirect(303, '/');
+		redirect(303, '/statistics');
 	}
 
 	return {
@@ -30,7 +30,7 @@ export const actions: Actions = {
 		});
 
 		if (!res.error) {
-			redirect(303, '/');
+			redirect(303, '/statistics');
 		} else {
 			return {
 				form

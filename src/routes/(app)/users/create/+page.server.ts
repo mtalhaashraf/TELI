@@ -6,22 +6,20 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { Rights } from '../../../../types/right-permissions.type';
 
 export const load = async ({ locals: { supabaseServiceRole, getSession }, parent }) => {
-	const { permissions } = await parent();
-
-	console.log(permissions);
-
 	const { user } = await getSession();
 
 	if (!user) {
 		redirect(303, '/auth');
 	}
 
+	const { permissions } = await parent();
+
 	const { data: clients } = await supabaseServiceRole.from('clients').select('*');
 
 	let form;
 
 	if (permissions.rights == Rights.SALES_MANAGER) {
-		const client = clients?.find((e) => e.id == permissions.users.client);
+		const client = clients?.find((e) => e.id.toString() == permissions.users.client);
 
 		if (client) {
 			form = await superValidate(

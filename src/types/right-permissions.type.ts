@@ -9,7 +9,7 @@ export interface RightPermissions {
 	rights: Rights;
 	users?: {
 		access_rights: Rights;
-		client?: number;
+		client?: string;
 		actions?: {
 			add?: {
 				client: boolean;
@@ -25,7 +25,7 @@ export interface RightPermissions {
 		};
 	};
 	campaigns?: {
-		client?: number;
+		client?: string;
 		actions?: {
 			add?: boolean;
 			update?: boolean;

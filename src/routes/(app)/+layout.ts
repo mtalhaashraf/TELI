@@ -21,9 +21,9 @@ export const load = async ({ fetch, data, depends, url }) => {
 
 	console.log('------------------------------ ', path.split('/')[0]);
 
-	const defaultPath = '/';
+	const defaultPath = '/statistics';
 
-	if (!(data.permissions as RightPermissions)[path.split('/')[0] || 'statistics']) {
+	if (!(data.permissions as RightPermissions)[path.split('/')[0]]) {
 		redirect(303, defaultPath);
 	}
 

@@ -164,6 +164,7 @@
 	const { selectedDataIds } = pluginStates.select;
 
 	const handleAddUser = () => {
+		console.log('Going to add');
 		goto('/users/create');
 	};
 </script>
