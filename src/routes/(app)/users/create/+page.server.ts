@@ -91,7 +91,13 @@ export const actions: Actions = {
 		};
 
 		const { error: createUserError, data: authUserData } =
-			await event.locals.supabaseServiceRole.auth.admin.createUser(authUser);
+			await event.locals.supabaseServiceRole.auth.admin.createUser({
+				...authUser,
+				user_metadata: {
+					name: form.data.full_name
+				},
+				email_confirm: true
+			});
 
 		if (createUserError) {
 			console.log(createUserError);
