@@ -5,10 +5,6 @@
 	import { superForm, type FormPath, type Infer } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
-	import { page } from '$app/stores';
-
-	export let data;
-	console.log('data.settings?.profile?.actions?.status:', data.settings?.profile?.actions?.status);
 
 	export let form;
 
@@ -42,7 +38,6 @@
 			value: string;
 			label: string;
 		}[];
-		show?: boolean;
 	}
 
 	const fields: Field[] = [
@@ -77,44 +72,41 @@
 			options: statuses.map((e) => ({
 				value: e,
 				label: e
-			})),
-			show: !!data.settings?.profile?.actions?.status
+			}))
 		}
 	];
 </script>
 
 <div class="flex w-full flex-col items-center">
 	<form class="mx-auto min-w-[640px]" method="POST" use:enhance>
-		{#each fields as { name, label, readonly, type, options, show } (name)}
-			{#if show !== false} <!-- Check if show is not explicitly false -->
-				{#if type == 'dropdown' && options && options?.length > 0}
-					<Form.Field form={superFormData} {name}>
-						<Form.Control let:attrs>
-							<Form.Label>{label}</Form.Label>
-							<Select.Root bind:selected={$formData[name]}>
-								<Select.Trigger {...attrs}>
-									<Select.Value placeholder="Select one" />
-								</Select.Trigger>
-								<Select.Content>
-									{#each options as option (option.value)}
-										<Select.Item value={option.value} label={option.label} />
-									{/each}
-								</Select.Content>
-							</Select.Root>
-							<!-- <input hidden bind:value={$formData[name]} name={attrs.name} /> -->
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
-				{:else}
-					<Form.Field form={superFormData} {name}>
-						<Form.Control let:attrs>
-							<Form.Label>{label}</Form.Label>
-							<Input {...attrs} bind:value={$formData[name]} {readonly} {type} />
-							<!-- Use type attribute here -->
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
-				{/if}
+		{#each fields as { name, label, readonly, type, options } (name)}
+			{#if type == 'dropdown' && options && options?.length > 0}
+				<Form.Field form={superFormData} {name}>
+					<Form.Control let:attrs>
+						<Form.Label>{label}</Form.Label>
+						<Select.Root bind:selected={$formData[name]}>
+							<Select.Trigger {...attrs}>
+								<Select.Value placeholder="Select one" />
+							</Select.Trigger>
+							<Select.Content>
+								{#each options as option (option.value)}
+									<Select.Item value={option.value} label={option.label} />
+								{/each}
+							</Select.Content>
+						</Select.Root>
+						<!-- <input hidden bind:value={$formData[name]} name={attrs.name} /> -->
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+			{:else}
+				<Form.Field form={superFormData} {name}>
+					<Form.Control let:attrs>
+						<Form.Label>{label}</Form.Label>
+						<Input {...attrs} bind:value={$formData[name]} {readonly} {type} />
+						<!-- Use type attribute here -->
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
 			{/if}
 		{/each}
 		<Form.Button disabled={loading}>

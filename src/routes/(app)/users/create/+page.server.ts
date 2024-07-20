@@ -58,7 +58,7 @@ export const actions: Actions = {
 			await event.locals.supabaseServiceRole.auth.admin.createUser(authUser);
 
 		if (createUserError) {
-		//	console.log(createUserError);
+			console.log(createUserError);
 			return fail(400, { form });
 		}
 
@@ -77,7 +77,7 @@ export const actions: Actions = {
 			.eq('id', authUserData?.user.id);
 
 		if (createUserError || insertError) {
-		//	console.log(createUserError || insertError);
+			console.log(createUserError || insertError);
 			return fail(400, { form });
 		}
 

@@ -24,7 +24,7 @@
 			loading = false;
 		},
 		onError: ({ result }) => {
-		//	console.log(result);
+			console.log(result);
 			loading = false;
 		}
 	});
