@@ -3,8 +3,13 @@ import { addUserFormSchema } from '$lib/schemas';
 import { fail, json, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { Rights } from '../../../../types/right-permissions.type';
 
-export const load = async ({ locals: { supabaseServiceRole, getSession }, params }) => {
+export const load = async ({ locals: { supabaseServiceRole, getSession }, parent }) => {
+	const { permissions } = await parent();
+
+	console.log(permissions);
+
 	const { user } = await getSession();
 
 	if (!user) {
@@ -13,7 +18,38 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 
 	const { data: clients } = await supabaseServiceRole.from('clients').select('*');
 
-	const form = await superValidate(zod(addUserFormSchema));
+	let form;
+
+	if (permissions.rights == Rights.SALES_MANAGER) {
+		const client = clients?.find((e) => e.id == permissions.users.client);
+
+		if (client) {
+			form = await superValidate(
+				{
+					rights: {
+						value: Rights.SALES_PERSON,
+						label: Rights.SALES_PERSON
+					},
+					client: {
+						value: client.id.toString(),
+						label: client.full_name
+					}
+				},
+				zod(addUserFormSchema)
+			);
+		} else {
+			form = await superValidate(
+				{
+					rights: {
+						value: Rights.SALES_MANAGER
+					}
+				},
+				zod(addUserFormSchema)
+			);
+		}
+	} else {
+		form = await superValidate(zod(addUserFormSchema));
+	}
 
 	return {
 		form,
