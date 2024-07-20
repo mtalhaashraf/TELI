@@ -145,56 +145,6 @@
 		'client'
 	];
 
-	const columns = table.createColumns([
-		table.column({
-			header: 'Name',
-			accessor: 'full_name',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Client',
-			accessor: 'client',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Company Email',
-			accessor: 'company_email',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Phone',
-			accessor: 'phone',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Cell',
-			accessor: 'cell',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Secondary Email',
-			accessor: 'email2',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Rights',
-			accessor: 'rights',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Status',
-			accessor: 'status',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: '',
-			accessor: ({ id }) => id,
-			cell: (item) => {
-				return createRender(Actions, { id: item.value });
-			}
-		})
-	]);
-
 	const { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
 		table.createViewModel(getColumns());
 
