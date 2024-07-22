@@ -13,7 +13,7 @@
 	// let show = false;
 
 	const handleUploadFile = () => {
-		const url = `https://telibot-vapi.azurewebsites.net/?ClientID=${clientid}&CampaignID=${id}`;
+		const url = `https://test-teli-bot.azurewebsites.net/?ClientID=${clientid}&CampaignID=${id}`;
 		window.open(url, '_blank');
 	};
 
