@@ -45,13 +45,13 @@
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
-		{#if $page.data.permissions.campaigns.actions.update}
+		{#if $page.data.permissions.campaigns?.actions?.update}
 			<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
 		{/if}
-		{#if $page.data.permissions.campaigns.actions.delete}
+		{#if $page.data.permissions.campaigns?.actions?.delete}
 			<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
 		{/if}
-		{#if $page.data.permissions.campaigns.actions.upload_file && $page.data.permissions.campaigns.client}
+		{#if $page.data.permissions.campaigns?.actions?.upload_file}
 			<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
 		{/if}
 	</DropdownMenu.Content>
