@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 export const editClientFormSchema = z.object({
 	full_name: z.string(),
@@ -7,10 +7,8 @@ export const editClientFormSchema = z.object({
 	phone: z.string(),
 	cell: z.string(),
 	email: z.string(),
-	status: z.object({
-		label: z.string(),
-		value: z.string()
-	})
+	status: z.string()
 });
 
 export type EditClientFormType = typeof editClientFormSchema;
+

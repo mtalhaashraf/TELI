@@ -15,7 +15,7 @@ export const load = async ({ locals: { supabase, getSession } }) => {
 
 	const form = await superValidate((data as any) || {}, zod(editClientFormSchema));
 
-	console.log(form);
+	// console.log(form);
 	return {
 		form
 	};

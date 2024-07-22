@@ -5,6 +5,8 @@
 	import { superForm, type FormPath, type Infer } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
+	import { page } from '$app/stores';
+
 
 	export let form;
 
@@ -38,6 +40,7 @@
 			value: string;
 			label: string;
 		}[];
+		show?: boolean
 	}
 
 	const fields: Field[] = [
@@ -72,14 +75,15 @@
 			options: statuses.map((e) => ({
 				value: e,
 				label: e
-			}))
+			})),
+			show:  !$page.data.permissions.settings.profile.actions.status
 		}
 	];
 </script>
 
 <div class="flex w-full flex-col items-center">
 	<form class="mx-auto min-w-[640px]" method="POST" use:enhance>
-		{#each fields as { name, label, readonly, type, options } (name)}
+		{#each fields as { name, label, readonly, type, options, show } (name)}
 			{#if type == 'dropdown' && options && options?.length > 0}
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>

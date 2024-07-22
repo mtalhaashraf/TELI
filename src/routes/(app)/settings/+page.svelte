@@ -8,49 +8,49 @@
 
 	export let data;
 
-	interface Field {
-		label: string;
-		name: FormPath<Infer<EditClientFormType>>;
-	}
+	// interface Field {
+	// 	label: string;
+	// 	name: FormPath<Infer<EditClientFormType>>;
+	// }
 
-	let loading = false;
+	// let loading = false;
 
-	const fields: Field[] = [
-		{
-			label: 'Name',
-			name: 'full_name'
-		},
-		{
-			label: 'Company Name',
-			name: 'company_name'
-		},
-		{
-			label: 'Company Website',
-			name: 'website'
-		},
-		{
-			label: 'Phone',
-			name: 'phone'
-		},
-		{
-			label: 'Mobile',
-			name: 'cell'
-		},
-		{
-			label: 'Secondary Email',
-			name: 'email'
-		},
-		{
-			label: 'Status',
-			name: 'status'
-		}
-	];
+	// const fields: Field[] = [
+	// 	{
+	// 		label: 'Name',
+	// 		name: 'full_name'
+	// 	},
+	// 	{
+	// 		label: 'Company Name',
+	// 		name: 'company_name'
+	// 	},
+	// 	{
+	// 		label: 'Company Website',
+	// 		name: 'website'
+	// 	},
+	// 	{
+	// 		label: 'Phone',
+	// 		name: 'phone'
+	// 	},
+	// 	{
+	// 		label: 'Mobile',
+	// 		name: 'cell'
+	// 	},
+	// 	{
+	// 		label: 'Secondary Email',
+	// 		name: 'email'
+	// 	},
+	// 	{
+	// 		label: 'Status',
+	// 		name: 'status'
+	// 	}
+	// ];
 
-	const form = superForm(data.form, {
-		validators: zodClient(editClientFormSchema)
-	});
+	// const form = superForm(data.form, {
+	// 	validators: zodClient(editClientFormSchema)
+	// });
 
-	const { form: formData, delayed } = form;
+	// const { form: formData, delayed } = form;
 </script>
 
 <svelte:head>
