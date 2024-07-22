@@ -27,5 +27,5 @@
 </svelte:head>
 
 <div class="flex w-full flex-col items-center">
-	<AddCampaign form={data.form} assistants={data.assistants} profiles={data.profiles} />
+	<AddCampaign form={data.form} assistants={data.assistants} clients={data.clients} />
 </div>

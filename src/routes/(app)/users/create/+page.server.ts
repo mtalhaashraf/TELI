@@ -72,17 +72,6 @@ export const actions: Actions = {
 			});
 		}
 
-		console.log('Insert user: ', {
-			avatar_url: null,
-			cell: form.data.cell,
-			client_id: form.data.client.value,
-			email2: form.data.email2,
-			rights: form.data.rights.value,
-			full_name: form.data.full_name,
-			phone: form.data.phone,
-			status: form.data.status.value
-		});
-
 		const authUser = {
 			email: form.data.company_email,
 			password: form.data.password

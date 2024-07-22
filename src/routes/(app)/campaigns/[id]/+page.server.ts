@@ -4,12 +4,20 @@ import { assistant } from '$lib/vapi/index.js';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { Rights, type RightPermissions } from '../../../../types/right-permissions.type';
+import type { Database } from '../../../../types/supabase';
 
-export const load = async ({ locals: { supabaseServiceRole, getSession }, params }) => {
+export const load = async ({ locals: { supabaseServiceRole, getSession }, params, parent }) => {
 	const { user } = await getSession();
 
 	if (!user) {
 		redirect(303, '/auth');
+	}
+
+	const { permissions }: { permissions: RightPermissions } = await parent();
+
+	if (!permissions.campaigns?.actions?.update) {
+		redirect(303, '/statistics');
 	}
 
 	const assistants = await assistant.get();
@@ -19,6 +27,8 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		.select('*')
 		.eq('campaignid', params.id)
 		.single();
+
+	const { data: clients, error } = await supabaseServiceRole.from('clients').select('*');
 
 	const Assistant = {
 		value: data?.assistID,
@@ -30,19 +40,63 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		const month = String(date.getUTCMonth() + 1).padStart(2, '0');
 		const day = String(date.getUTCDate()).padStart(2, '0');
 		return `${year}-${month}-${day}`;
-	  }
-	const {startdate, enddate, ...rest} = data
-	const formatedData = {
-		startdate: formatDate(data?.startdate),
-		enddate: formatDate(data?.enddate),
-		...rest
 	}
-	return {
-		form: await superValidate(({ Assistant, ...formatedData } as any) || {}, zod(editCampaignFormSchema)),
+	const { startdate, enddate, client_id, ...rest } = data;
+	const formatedData = {
+		startdate: startdate ? formatDate(data?.startdate) : '',
+		enddate: enddate ? formatDate(data?.enddate) : '',
+		...rest
+	};
 
+	let form;
+
+	const client = clients?.find((e) => e.id.toString() == client_id?.toString());
+
+	// if (permissions.rights == Rights.SALES_MANAGER && permissions.campaigns.client && client) {
+	// 	form = await superValidate(
+	// 		({
+	// 			Assistant,
+	// 			...formatedData,
+	// 			Client: {
+	// 				value: client?.id.toString(),
+	// 				label: client?.full_name
+	// 			}
+	// 		} as any) || {},
+	// 		zod(editCampaignFormSchema)
+	// 	);
+	// } else {
+	// 	const client = clients?.find((e) => e.id.toString() == permissions?.campaigns?.client);
+
+	// 	form = await superValidate(
+	// 		({
+	// 			Assistant,
+	// 			...formatedData
+	// 		} as any) || {},
+	// 		zod(editCampaignFormSchema)
+	// 	);
+	// }
+
+	form = await superValidate(
+		({
+			Assistant,
+			...formatedData,
+			Client: {
+				value: client?.id.toString() || '',
+				label: client?.full_name || ''
+			}
+		} as any) || {},
+		zod(editCampaignFormSchema)
+	);
+
+	return {
+		form: form,
+		clients: clients?.map((e: any) => ({
+			value: e.id.toString(),
+			label: e.full_name
+		})),
 		assistants: assistants.map((e: any) => ({
-			id: e.id,
-			name: e.name,
+			value: e.id,
+			label: e.name
 		}))
 	};
 };
@@ -63,19 +117,22 @@ export const actions: Actions = {
 			});
 		}
 
-		const { Assistant, ...rest } = form.data;
+		const { Client, Assistant, startdate, enddate, ...rest } = form.data;
 
-		console.log('Update Campaign: ', form.data);
-
-		const newcampaigns = {
+		const newCampaign: Database['public']['Tables']['campaigns']['Update'] = {
 			assistant: Assistant.label,
 			assistID: Assistant.value,
+			client_id: Number(Client.value),
+			startdate: startdate ? new Date(startdate).toISOString() : null,
+			enddate: enddate ? new Date(enddate).toISOString() : null,
 			...rest
 		};
 
+		console.log('Update Campaign: ', newCampaign);
+
 		const { error } = await event.locals.supabaseServiceRole
 			.from('campaigns')
-			.update(newcampaigns)
+			.update(newCampaign)
 			.eq('campaignid', event.params.id as string);
 
 		if (error) {

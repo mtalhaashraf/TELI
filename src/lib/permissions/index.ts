@@ -40,7 +40,8 @@ const admin_permissions: RightPermissions = {
 		actions: {
 			add: true,
 			update: true,
-			delete: false
+			delete: true,
+			upload_file: true
 		}
 	}
 };

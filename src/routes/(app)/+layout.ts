@@ -19,8 +19,6 @@ export const load = async ({ fetch, data, depends, url }) => {
 	// Protect routes
 	const path = (url.pathname as string)?.replace('/', '');
 
-	console.log('------------------------------ ', path.split('/')[0]);
-
 	const defaultPath = '/statistics';
 
 	if (!(data.permissions as RightPermissions)[path.split('/')[0]]) {
