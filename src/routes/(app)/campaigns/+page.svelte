@@ -16,14 +16,16 @@
 	} from 'svelte-headless-table/plugins';
 	import { readable } from 'svelte/store';
 	import Actions from './components/data-table-actions.svelte';
-	import Switch from './components/data-table-switch-button.svelte';
-	import type { Campaign } from '../../../types/campaign.type';
+	// import Switch from './components/data-table-switch-button.svelte';
+	// import type { Campaign } from '../../../types/campaign.type';
 	import { goto } from '$app/navigation';
+	import type { Database } from '../../../types/supabase';
 
 	export let data;
-	console.log(data.permissions.components.campaigns.add)
 	let { campaigns, permissions } = data;
 	$: ({ campaigns } = data);
+
+	type Campaign = Database['public']['Tables']['campaigns']['Row'];
 
 	let table = createTable(readable(campaigns as Campaign[]), {
 		sort: addSortBy({ disableMultiSort: true }),
@@ -35,72 +37,107 @@
 		hide: addHiddenColumns()
 	});
 
-	let columns = table.createColumns([
-		// table.column({
-		// 	header: 'Campaign Status',
-		// 	accessor: 'status',
-		// 	cell: () => {
-		// 		return createRender(Switch);
-		// 	},
-		// 	plugins: {
-		// 		sort: {
-		// 			disable: true
-		// 		}
-		// 	}
-		// }),
-		table.column({
-			header: 'Name',
-			accessor: 'campaignname',
-			cell: ({ value }) => value || '-',
-		}),
-		table.column({
-			header: 'Assistant',
-			accessor: 'assistant',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Desired Outcome',
-			accessor: 'desiredoutcome',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Description',
-			accessor: 'description',
-			cell: ({ value }) => value || '-'
-		}),
-		table.column({
-			header: 'Start Date',
-			accessor: 'startdate',
-			cell: ({ value }) => formatDate(value)
-		}),
-		table.column({
-			header: 'End Date',
-			accessor: 'enddate',
-			cell: ({ value }) => formatDate(value || ''),
-			plugins: {
-				filter: {
-					getFilterValue(value) {
-						return value ? value.toLowerCase() : '';
+	const getColumns = () => {
+		if (permissions.campaigns.actions) {
+			return table.createColumns([
+				table.column({
+					header: 'Name',
+					accessor: 'campaignname',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Assistant',
+					accessor: 'assistant',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Desired Outcome',
+					accessor: 'desiredoutcome',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Description',
+					accessor: 'description',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Start Date',
+					accessor: 'startdate',
+					cell: ({ value }) => formatDate(value)
+				}),
+				table.column({
+					header: 'End Date',
+					accessor: 'enddate',
+					cell: ({ value }) => formatDate(value || ''),
+					plugins: {
+						filter: {
+							getFilterValue(value) {
+								return value ? value.toLowerCase() : '';
+							}
+						}
 					}
-				}
-			}
-		}),
+				}),
+				table.column({
+					header: 'Actions',
+					accessor: (item: Campaign) => ({
+						campaignid: item.campaignid,
+						clientid: item.client_id
+					}),
+					cell: ({ value }) => {
+						const { campaignid, clientid } = value as { campaignid: number; clientid: number };
+						return createRender(Actions, { id: campaignid, clientid, permissions });
+					},
+					plugins: {
+						sort: {
+							disable: true
+						}
+					}
+				})
+			]);
+		} else {
+			return table.createColumns([
+				table.column({
+					header: 'Name',
+					accessor: 'campaignname',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Assistant',
+					accessor: 'assistant',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Desired Outcome',
+					accessor: 'desiredoutcome',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Description',
+					accessor: 'description',
+					cell: ({ value }) => value || '-'
+				}),
+				table.column({
+					header: 'Start Date',
+					accessor: 'startdate',
+					cell: ({ value }) => formatDate(value)
+				}),
+				table.column({
+					header: 'End Date',
+					accessor: 'enddate',
+					cell: ({ value }) => formatDate(value || ''),
+					plugins: {
+						filter: {
+							getFilterValue(value) {
+								return value ? value.toLowerCase() : '';
+							}
+						}
+					}
+				})
+			]);
+		}
+	};
 
-		table.column({
-			header: 'Actions',
-			accessor: (item: Campaign) => ({ campaignid: item.campaignid, clientid: item.clientid, permissions }),
-			cell: ({ value }) => {
-				const { campaignid, clientid } = value as { campaignid: number, clientid: number };
-				return createRender(Actions, { id: campaignid, clientid, permissions });
-			},
-			plugins: {
-				sort: {
-					disable: true
-				}
-			}
-		})
-	
-	]);
+	let columns = getColumns();
 
 	let { headerRows, pageRows, tableAttrs, tableBodyAttrs, flatColumns, pluginStates, rows } =
 		table.createViewModel(columns);
@@ -117,15 +154,20 @@
 
 	let { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
 	let { filterValue } = pluginStates.filter;
-    const sortableCells = ['campaignname', 'assistant', 'desiredoutcome', 'description', 'startdate', 'enddate']
+	const sortableCells = [
+		'campaignname',
+		'assistant',
+		'desiredoutcome',
+		'description',
+		'startdate',
+		'enddate'
+	];
 	let { selectedDataIds } = pluginStates.select;
-	const sortableColumn = ['campaignname','assistant','desiredoutcome','description']
+	const sortableColumn = ['campaignname', 'assistant', 'desiredoutcome', 'description'];
 
-		const handleAddCampaign = () => {
+	const handleAddCampaign = () => {
 		goto('/campaigns/create');
 	};
-
-	
 </script>
 
 <svelte:head>
@@ -134,8 +176,8 @@
 <div class="w-full">
 	<div class="flex items-center py-4">
 		<Input class="max-w-sm" placeholder="Search..." type="text" bind:value={$filterValue} />
-		{#if permissions.components.campaigns.add}
-		<Button  on:click={handleAddCampaign} variant="outline" class="ml-auto">Add Campaign</Button>			
+		{#if permissions.campaigns?.actions?.add}
+			<Button on:click={handleAddCampaign} variant="outline" class="ml-auto">Add Campaign</Button>
 		{/if}
 	</div>
 	<div class="rounded-md border">
@@ -174,7 +216,11 @@
 			<Table.Body {...$tableBodyAttrs}>
 				{#each $pageRows as row (row.id)}
 					<Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-						<Table.Row {...rowAttrs} data-state={$selectedDataIds[row.id] && 'selected'} class='text-center'>
+						<Table.Row
+							{...rowAttrs}
+							data-state={$selectedDataIds[row.id] && 'selected'}
+							class="text-center"
+						>
 							{#each row.cells as cell (cell.id)}
 								<Subscribe attrs={cell.attrs()} let:attrs>
 									<Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>

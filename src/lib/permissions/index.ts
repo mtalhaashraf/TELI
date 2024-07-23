@@ -40,7 +40,8 @@ const admin_permissions: RightPermissions = {
 		actions: {
 			add: true,
 			update: true,
-			delete: false
+			delete: true,
+			upload_file: true
 		}
 	}
 };
@@ -81,7 +82,8 @@ const sales_manager_permissions: RightPermissions = {
 		actions: {
 			add: true,
 			update: true,
-			delete: false
+			delete: false,
+			upload_file: true
 		}
 	}
 };

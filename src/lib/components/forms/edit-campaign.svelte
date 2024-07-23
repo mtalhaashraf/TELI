@@ -6,9 +6,12 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import Textarea from '../ui/textarea/textarea.svelte';
 	import * as Select from '../ui/select';
+	import { readonly } from 'svelte/store';
+	import { page } from '$app/stores';
 
 	export let form;
 	export let assistants;
+	export let clients;
 
 	const superFormData = superForm(form, {
 		validators: zodClient(editCampaignFormSchema),
@@ -21,6 +24,7 @@
 		label: string;
 		name: string;
 		type?: 'date' | 'textarea' | 'number' | 'dropdown';
+		readonly?: boolean;
 		options?: {
 			id: string;
 			name: string;
@@ -49,6 +53,13 @@
 			options: assistants
 		},
 		{
+			label: 'Client',
+			name: 'Client',
+			type: 'dropdown',
+			options: clients,
+			readonly: !!$page.data.permissions.campaigns?.client
+		},
+		{
 			label: 'Sales Manager Script',
 			name: 'script',
 			type: 'textarea'
@@ -64,16 +75,17 @@
 		}
 	];
 
+	$: console.log($formData);
 </script>
 
 <form class="mx-auto min-w-[640px]" method="POST" use:enhance>
-	{#each fields as { name, label, type, options } (name)}
+	{#each fields as { name, label, type, readonly, options } (name)}
 		{#if type}
 			{#if type == 'date'}
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Input {...attrs} type="date" bind:value={$formData[name]} />
+						<Input {...attrs} {readonly} type="date" bind:value={$formData[name]} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
@@ -81,9 +93,9 @@
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Select.Root bind:selected={$formData[name]}>
+						<Select.Root disabled={readonly} bind:selected={$formData[name]}>
 							<Select.Trigger {...attrs}>
-								<Select.Value placeholder="Select a assistant" />
+								<Select.Value placeholder="Select a {name}" />
 							</Select.Trigger>
 							<Select.Content>
 								{#each options as { id, name } (id)}
@@ -99,15 +111,15 @@
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Input {...attrs} bind:value={$formData[name]} />
-					</Form.Control> 
+						<Input {...attrs} {readonly} bind:value={$formData[name]} />
+					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
 			{:else if type == 'textarea'}
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Textarea {...attrs} bind:value={$formData[name]} />
+						<Textarea {...attrs} {readonly} bind:value={$formData[name]} />
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
@@ -116,7 +128,7 @@
 			<Form.Field form={superFormData} {name}>
 				<Form.Control let:attrs>
 					<Form.Label>{label}</Form.Label>
-					<Input {...attrs} bind:value={$formData[name]} />
+					<Input {...attrs} {readonly} bind:value={$formData[name]} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>

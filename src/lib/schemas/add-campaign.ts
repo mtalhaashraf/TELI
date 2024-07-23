@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
 export const addCampaignFormSchema = z.object({
-	campaignname: z.string(),
+	campaignname: z
+		.string({ required_error: 'Campaign Name is required' })
+		.min(5, 'Enter minimum 5 letters name'),
 	startdate: z.string(),
 	enddate: z.string(),
 	Assistant: z.object({
@@ -9,7 +11,7 @@ export const addCampaignFormSchema = z.object({
 		label: z.string()
 	}),
 	Client: z.object({
-		value: z.number(),
+		value: z.string(),
 		label: z.string()
 	}),
 	script: z.string(),

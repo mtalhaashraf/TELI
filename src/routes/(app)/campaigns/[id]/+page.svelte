@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation';
 
 	export let data;
-	
+
 	function navigateHome() {
 		goto('/');
 	}
@@ -15,9 +15,7 @@
 	<Breadcrumb.List>
 		<Breadcrumb.Item>
 			<Breadcrumb.Link asChild let:attrs>
-				<a href="/" {...attrs} on:click|preventDefault={navigateHome}>
-					Home
-				</a>
+				<a href="/" {...attrs} on:click|preventDefault={navigateHome}> Home </a>
 			</Breadcrumb.Link>
 		</Breadcrumb.Item>
 		<Breadcrumb.Separator />
@@ -32,5 +30,5 @@
 </svelte:head>
 
 <div class="flex w-full flex-col items-center">
-	<EditCampaign assistants={data.assistants} form={data.form} />
+	<EditCampaign assistants={data.assistants} clients={data.clients} form={data.form} />
 </div>

@@ -4,7 +4,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import UploadFile from './upload-file.svelte';
-	
+	import { page } from '$app/stores';
+
 	export let permissions: any;
 	export let clientid: any;
 	export let id: any;
@@ -12,7 +13,7 @@
 	// let show = false;
 
 	const handleUploadFile = () => {
-		const url = `https://telibot-vapi.azurewebsites.net/?ClientID=${clientid}&CampaignID=${id}`;
+		const url = `https://test-teli-bot.azurewebsites.net/?ClientID=${clientid}&CampaignID=${id}`;
 		window.open(url, '_blank');
 	};
 
@@ -44,13 +45,15 @@
 		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
-		{#if permissions.components.campaigns.update}
+		{#if $page.data.permissions.campaigns?.actions?.update}
 			<DropdownMenu.Item on:click={handleEdit}>Edit</DropdownMenu.Item>
 		{/if}
-		{#if permissions.components.campaigns.delete}
+		{#if $page.data.permissions.campaigns?.actions?.delete}
 			<DropdownMenu.Item on:click={handleDelete}>Delete</DropdownMenu.Item>
 		{/if}
-		<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
+		{#if $page.data.permissions.campaigns?.actions?.upload_file}
+			<DropdownMenu.Item on:click={handleUploadFile}>Upload File</DropdownMenu.Item>
+		{/if}
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
 
