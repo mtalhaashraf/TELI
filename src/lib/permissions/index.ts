@@ -23,19 +23,13 @@ const admin_permissions: RightPermissions = {
 			}
 		}
 	},
-	settings: {
-		profile: {
-			actions: {
-				client: false,
-				rights: false,
-				status: false
-			}
+	profile: {
+		actions: {
+			client: true,
+			rights: true,
+			status: true
 		}
 	},
-	billing: true,
-	statistics: true,
-	clients: true,
-	assistants: true,
 	campaigns: {
 		actions: {
 			add: true,
@@ -43,7 +37,12 @@ const admin_permissions: RightPermissions = {
 			delete: true,
 			upload_file: true
 		}
-	}
+	},
+	settings: true,
+	billing: true,
+	statistics: true,
+	clients: true,
+	assistants: true
 };
 
 const sales_manager_permissions: RightPermissions = {
@@ -65,18 +64,13 @@ const sales_manager_permissions: RightPermissions = {
 			}
 		}
 	},
-	settings: {
-		profile: {
-			actions: {
-				client: false,
-				rights: false,
-				status: false
-			}
+	profile: {
+		actions: {
+			client: false,
+			rights: false,
+			status: false
 		}
 	},
-	billing: true,
-	statistics: true,
-	clients: false,
 	campaigns: {
 		client: 'sales_manager_client_id',
 		actions: {
@@ -85,24 +79,25 @@ const sales_manager_permissions: RightPermissions = {
 			delete: false,
 			upload_file: true
 		}
-	}
+	},
+	billing: true,
+	statistics: true,
+	clients: false
 };
 
 const sales_person_permissions: RightPermissions = {
 	rights: Rights.SALES_PERSON,
-	settings: {
-		profile: {
-			actions: {
-				client: false,
-				rights: false,
-				status: false
-			}
+	profile: {
+		actions: {
+			client: false,
+			rights: false,
+			status: false
 		}
 	},
-	statistics: true,
 	campaigns: {
 		client: 'sales_person_client_id'
-	}
+	},
+	statistics: true
 };
 
 export {

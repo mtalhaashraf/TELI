@@ -34,15 +34,14 @@ export interface RightPermissions {
 			start_pause?: boolean;
 		};
 	};
-	settings?: {
-		profile?: {
-			actions: {
-				client: boolean;
-				rights: boolean;
-				status: boolean;
-			};
+	profile?: {
+		actions: {
+			client: boolean;
+			rights: boolean;
+			status: boolean;
 		};
 	};
+	settings?: boolean;
 	billing?: boolean;
 	statistics?: boolean;
 	clients?: boolean;

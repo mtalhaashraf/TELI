@@ -42,8 +42,6 @@
 		}[];
 	}
 
-	// $: console.log($formData);
-
 	const fields: Field[] = [
 		{
 			label: 'Name',
@@ -59,7 +57,7 @@
 			name: 'client',
 			type: 'dropdown',
 			options: clients,
-			readonly: !$page.data.permissions.users.actions.update.client
+			readonly: !$page.data.permissions?.profile.actions.client
 		},
 		{
 			label: 'Phone',
@@ -81,7 +79,7 @@
 				value: e,
 				label: e
 			})),
-			readonly: !$page.data.permissions.users.actions.update.rights
+			readonly: !$page.data.permissions?.profile.actions.rights
 		},
 		{
 			label: 'Status',
@@ -91,7 +89,7 @@
 				value: e,
 				label: e
 			})),
-			readonly: !$page.data.permissions.users.actions.update.status
+			readonly: !$page.data.permissions?.profile.actions.status
 		}
 	];
 </script>

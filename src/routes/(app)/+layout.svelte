@@ -7,12 +7,13 @@
 	import CreditCard from 'lucide-svelte/icons/credit-card';
 	import Settings from 'lucide-svelte/icons/settings';
 	import ShieldAlert from 'lucide-svelte/icons/shield-alert';
+	import UserRoundPen from 'lucide-svelte/icons/user-round-plus';
 	import Users from 'lucide-svelte/icons/users';
 	import { onDestroy, onMount } from 'svelte';
 
 	export let data;
 
-	let { supabase, session, permissions} = data;
+	let { supabase, session, permissions } = data;
 	$: ({ supabase, session, permissions } = data);
 
 	onMount(() => {
@@ -24,12 +25,12 @@
 
 		return () => observer.data.subscription.unsubscribe();
 	});
-	
+
 	const handleLogout = async () => {
 		await supabase.auth.signOut();
 		goto('/auth');
 	};
-	
+
 	const menuItems = [
 		{
 			name: 'Statistics',
@@ -62,16 +63,21 @@
 			icon: CreditCard
 		},
 		{
+			name: 'Profile',
+			path: '/profile',
+			icon: UserRoundPen
+		},
+		{
 			name: 'Settings',
 			path: '/settings',
 			icon: Settings
 		}
 	];
 
-		// console.log(permissions);
-		
-	const filteredMenuItems = menuItems.filter(item => {
-		return permissions[item.name.toLowerCase()]		
+	// console.log(permissions);
+
+	const filteredMenuItems = menuItems.filter((item) => {
+		return permissions[item.name.toLowerCase()];
 	});
 </script>
 

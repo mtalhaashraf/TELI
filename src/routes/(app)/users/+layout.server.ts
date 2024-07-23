@@ -53,7 +53,8 @@ export const load = async (props) => {
 	return {
 		users: users
 			?.filter((e) => e.id)
-			.map((e) => {
+			?.filter((e) => e.id !== session?.user?.id)
+			?.map((e) => {
 				return {
 					client: clients?.find((client) => client.id == e.client_id)?.full_name,
 					...e
