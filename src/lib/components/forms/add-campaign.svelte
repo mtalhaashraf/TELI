@@ -35,6 +35,7 @@
 		label: string;
 		name: FormPath<Infer<AddCampaignFormType>>;
 		type?: 'date' | 'textarea' | 'number' | 'dropdown';
+		height?: number;
 		readonly?: boolean;
 		options?: {
 			value: string;
@@ -73,7 +74,8 @@
 		{
 			label: 'Sales Manager Script',
 			name: 'script',
-			type: 'textarea'
+			type: 'textarea',
+			height: 300
 		},
 		{
 			label: 'Desired Outcome',
@@ -85,12 +87,10 @@
 			type: 'textarea'
 		}
 	];
-
-	$: console.log($formData, clients);
 </script>
 
 <form class="mx-auto min-w-[640px]" method="POST" use:enhance>
-	{#each fields as { name, label, type, readonly, options } (name)}
+	{#each fields as { name, label, type, height, readonly, options } (name)}
 		{#if type}
 			{#if type == 'date'}
 				<Form.Field form={superFormData} {name}>
@@ -130,7 +130,11 @@
 				<Form.Field form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
-						<Textarea {...attrs} {readonly} bind:value={$formData[name]} />
+						{#if height}
+							<Textarea class="h-[300px]" {...attrs} {readonly} bind:value={$formData[name]} />
+						{:else}
+							<Textarea {...attrs} {readonly} bind:value={$formData[name]} />
+						{/if}
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>

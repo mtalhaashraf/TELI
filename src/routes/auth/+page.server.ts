@@ -32,9 +32,9 @@ export const actions: Actions = {
 		if (!res.error) {
 			redirect(303, '/statistics');
 		} else {
-			return {
-				form
-			};
+			return fail(400, {
+				message: res.error.message
+			});
 		}
 	}
 };
