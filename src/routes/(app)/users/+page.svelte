@@ -51,11 +51,11 @@
 					accessor: 'cell',
 					cell: ({ value }) => value || '-'
 				}),
-				table.column({
-					header: 'Secondary Email',
-					accessor: 'email2',
-					cell: ({ value }) => value || '-'
-				}),
+				// table.column({
+				// 	header: 'Secondary Email',
+				// 	accessor: 'email2',
+				// 	cell: ({ value }) => value || '-'
+				// }),
 				table.column({
 					header: 'Rights',
 					accessor: 'rights',
@@ -101,11 +101,11 @@
 					accessor: 'cell',
 					cell: ({ value }) => value || '-'
 				}),
-				table.column({
-					header: 'Secondary Email',
-					accessor: 'email2',
-					cell: ({ value }) => value || '-'
-				}),
+				// table.column({
+				// 	header: 'Secondary Email',
+				// 	accessor: 'email2',
+				// 	cell: ({ value }) => value || '-'
+				// }),
 				table.column({
 					header: 'Rights',
 					accessor: 'rights',
