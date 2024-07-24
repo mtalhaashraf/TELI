@@ -250,7 +250,7 @@
 											<div class="capitalize">
 												<Render of={cell.render()} />
 											</div>
-										{:else if cell.id === 'email2'}
+										{:else if ['email2', 'company_email'].includes(cell.id)}
 											<a
 												class="capitalize hover:text-blue-500"
 												href="mailto:{cell.render()}"
