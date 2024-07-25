@@ -4,31 +4,33 @@
 	import { loginFormSchema, type LoginFormType } from '$lib/schemas';
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { toast } from 'svelte-sonner';
 
 	export let data: SuperValidated<Infer<LoginFormType>>;
 
+	let loading = false;
+
 	const form = superForm(data, {
-		validators: zodClient(loginFormSchema)
+		validators: zodClient(loginFormSchema),
+		onSubmit: () => {
+			loading = true;
+		},
+		onResult: ({ result }: any) => {
+			if (result?.data && result?.data?.message) {
+				toast(result?.data?.message || 'Internal Error');
+			}
+			loading = false;
+		},
+		onError: ({ result }) => {
+			console.log(result);
+			loading = false;
+		}
 	});
 
 	const { form: formData, enhance } = form;
-
-	let isLoading = false;
-
-	async function handleSubmit(event: any) {
-		isLoading = true;
-		try {
-			await enhance(event);
-			// Handle successful submission here
-		} catch (error) {
-			// Handle error here
-		} finally {
-			isLoading = false;
-		}
-	}
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="mx-auto" method="POST" use:enhance>
+<form class="mx-auto" method="POST" use:enhance>
 	<Form.Field {form} name="email">
 		<Form.Control let:attrs>
 			<Form.Label>Email</Form.Label>
@@ -43,8 +45,8 @@
 		</Form.Control>
 		<Form.FieldErrors />
 	</Form.Field>
-	<Form.Button disabled={isLoading}>
-		{#if isLoading}
+	<Form.Button disabled={loading}>
+		{#if loading}
 			Loading...
 		{:else}
 			Login

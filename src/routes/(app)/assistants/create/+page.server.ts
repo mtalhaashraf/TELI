@@ -1,9 +1,22 @@
 // src/routes/+page.server.ts
+import { addAssistantFormSchema } from '$lib/schemas/add-assistant.js';
 import { editAssistantFormSchema } from '$lib/schemas/edit-assistant.js';
 import { assistant } from '$lib/vapi/index.js';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+
+export const load = async ({ locals: { getSession }, params }) => {
+	const { user } = await getSession();
+
+	if (!user) {
+		redirect(303, '/auth');
+	}
+
+	return {
+		form: await superValidate(zod(addAssistantFormSchema))
+	};
+};
 
 export const actions: Actions = {
 	default: async (event) => {
