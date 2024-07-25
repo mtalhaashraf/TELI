@@ -26,13 +26,7 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, params
 		label: data?.status
 	};
 
-	const form = await superValidate(
-		({
-			...data,
-			status
-		} as any) || {},
-		zod(editClientFormSchema)
-	);
+	const form = await superValidate({ ...data, status }, zod(editClientFormSchema));
 
 	return {
 		form

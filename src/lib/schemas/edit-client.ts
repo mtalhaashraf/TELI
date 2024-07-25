@@ -7,7 +7,10 @@ export const editClientFormSchema = z.object({
 	phone: z.string(),
 	cell: z.string(),
 	email: z.string(),
-	status: z.string()
+	status: z.object({
+		label: z.string(),
+		value: z.string()
+	})
 });
 
 export type EditClientFormType = typeof editClientFormSchema;

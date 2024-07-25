@@ -63,12 +63,12 @@
 				table.column({
 					header: 'Start Date',
 					accessor: 'startdate',
-					cell: ({ value }) => formatDate(value)
+					cell: ({ value }) => (value ? formatDate(value) : '-')
 				}),
 				table.column({
 					header: 'End Date',
 					accessor: 'enddate',
-					cell: ({ value }) => formatDate(value || ''),
+					cell: ({ value }) => (value ? formatDate(value) : '-'),
 					plugins: {
 						filter: {
 							getFilterValue(value) {
@@ -85,7 +85,7 @@
 					}),
 					cell: ({ value }) => {
 						const { campaignid, clientid } = value as { campaignid: number; clientid: number };
-						return createRender(Actions, { id: campaignid, clientid, permissions });
+						return createRender(Actions, { id: campaignid, clientid });
 					},
 					plugins: {
 						sort: {

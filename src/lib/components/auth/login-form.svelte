@@ -2,9 +2,9 @@
 	import * as Form from '$lib/components/ui/form';
 	import { Input } from '$lib/components/ui/input';
 	import { loginFormSchema, type LoginFormType } from '$lib/schemas';
-	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
+	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	export let data: SuperValidated<Infer<LoginFormType>>;
 
@@ -17,7 +17,7 @@
 		},
 		onResult: ({ result }: any) => {
 			if (result?.data && result?.data?.message) {
-				toast(result?.data?.message || 'Internal Error');
+				toast.error(result?.data?.message || 'Internal Error');
 			}
 			loading = false;
 		},

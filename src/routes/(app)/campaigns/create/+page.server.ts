@@ -34,19 +34,14 @@ export const load = async ({ locals: { supabaseServiceRole, getSession }, parent
 
 	const client = clients?.find((e) => e.id.toString() == permissions?.campaigns?.client);
 
-	console.log('Found Client: ', {
-		value: client?.id.toString(),
-		label: client?.full_name
-	});
-
 	if (permissions.rights == Rights.SALES_MANAGER && permissions.campaigns.client && client) {
 		form = await superValidate(
-			({
+			{
 				Client: {
 					value: client.id.toString(),
 					label: client.full_name
 				}
-			} as any) || {},
+			} as any,
 			zod(addCampaignFormSchema)
 		);
 	} else {

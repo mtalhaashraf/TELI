@@ -7,7 +7,6 @@
 	import * as Select from '../ui/select';
 	import { page } from '$app/stores';
 
-
 	export let form;
 
 	let loading = false;
@@ -40,7 +39,7 @@
 			value: string;
 			label: string;
 		}[];
-		show?: boolean
+		show?: boolean;
 	}
 
 	const fields: Field[] = [
@@ -75,8 +74,7 @@
 			options: statuses.map((e) => ({
 				value: e,
 				label: e
-			})),
-			show:  !$page.data.permissions.settings.profile.actions.status
+			}))
 		}
 	];
 </script>
