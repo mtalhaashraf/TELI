@@ -7,7 +7,9 @@ export async function DELETE({ request, params, locals }) {
 		.delete()
 		.eq('campaignid', params.id);
 
-	console.log(error);
-
-	return json(data);
+		if (error) {
+			return json({ error: error.message }, { status: 500 });
+		}
+		
+		return json({ success: true, data });
 }

@@ -6,7 +6,7 @@
 	import UploadFile from './upload-file.svelte';
 	import { page } from '$app/stores';
 
-	export let permissions: any;
+//	export let permissions: any;
 	export let clientid: any;
 	export let id: any;
 	// console.log(id, clientid);
@@ -23,11 +23,17 @@
 	};
 
 	const handleDelete = async () => {
-		await fetch(`/api/campaigns/${id}`, {
+		const response = await fetch(`/api/campaigns/${id}`, {
 			method: 'DELETE'
 		});
 
-		invalidateAll();
+		if (response.ok) {
+			// Reload the page after a successful delete
+			window.location.reload();
+		} else {
+			const error = await response.json();
+			console.error('Error deleting client:', error);
+		}
 	};
 
 	function reloadPage() {

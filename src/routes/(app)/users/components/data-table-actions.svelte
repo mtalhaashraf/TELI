@@ -11,11 +11,17 @@
 	};
 
 	const handleDelete = async () => {
-		await fetch(`/api/users/${id}`, {
+		const response = await fetch(`/api/clients/${id}`, {
 			method: 'DELETE'
 		});
 
-		invalidateAll();
+		if (response.ok) {
+			// Reload the page after a successful delete
+			window.location.reload();
+		} else {
+			const error = await response.json();
+			console.error('Error deleting client:', error);
+		}
 	};
 </script>
 

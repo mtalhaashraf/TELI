@@ -10,11 +10,17 @@
 	};
 
 	const handleDelete = async () => {
-		await fetch(`/api/assistants/${id}`, {
+		const response = await fetch(`/api/assistants/${id}`, {
 			method: 'DELETE'
 		});
 
-		invalidateAll();
+		if (response.ok) {
+			// Reload the page after a successful delete
+			window.location.reload();
+		} else {
+			const error = await response.json();
+			console.error('Error deleting assistant:', error);
+		}
 	};
 </script>
 

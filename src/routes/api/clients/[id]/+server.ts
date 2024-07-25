@@ -1,13 +1,15 @@
-import { json } from '@sveltejs/kit';
+import { json, redirect } from '@sveltejs/kit';
 
 /** @type {import('./$types').RequestHandler} */
-export async function DELETE({ request, params, locals }) {
+export async function DELETE({ params, locals }) {
 	const { data, error } = await locals.supabaseServiceRole
 		.from('clients')
 		.delete()
 		.eq('id', params.id);
 
-	console.log(error);
-
-	return json(data);
+	if (error) {
+		return json({ error: error.message }, { status: 500 });
+	}
+	
+	return json({ success: true, data });
 }
