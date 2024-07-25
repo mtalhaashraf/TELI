@@ -11,7 +11,7 @@
 	};
 
 	const handleDelete = async () => {
-		const response = await fetch(`/api/clients/${id}`, {
+		const response = await fetch(`/api/users/${id}`, {
 			method: 'DELETE'
 		});
 
