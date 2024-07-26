@@ -9,7 +9,6 @@
 	import { page } from '$app/stores';
 	import { toast } from 'svelte-sonner';
 
-
 	export let form;
 	export let assistants;
 	export let clients;
@@ -104,7 +103,7 @@
 	{#each fields as { name, label, type, height, readonly, options } (name)}
 		{#if type}
 			{#if type == 'date'}
-				<Form.Field form={superFormData} {name}>
+				<Form.Field class="w-[200px]" form={superFormData} {name}>
 					<Form.Control let:attrs>
 						<Form.Label>{label}</Form.Label>
 						<Input {readonly} {...attrs} type="date" bind:value={$formData[name]} />
