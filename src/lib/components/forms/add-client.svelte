@@ -38,8 +38,8 @@
 	const { form: formData, enhance } = superFormData;
 
 	function allFieldsFilled() {
-		const { name, firstMessage, systemPrompt } = $formData;
-		return name && firstMessage && systemPrompt;
+		const { full_name, company_name, website, phone, cell, email, status } = $formData;
+		return full_name && company_name && website && phone && cell && email && status;
 	}
 
 	interface Field {

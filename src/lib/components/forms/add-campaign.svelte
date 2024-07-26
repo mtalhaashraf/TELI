@@ -7,6 +7,8 @@
 	import * as Select from '../ui/select';
 	import Textarea from '../ui/textarea/textarea.svelte';
 	import { page } from '$app/stores';
+	import { toast } from 'svelte-sonner';
+
 
 	export let form;
 	export let assistants;
@@ -18,6 +20,10 @@
 		validators: zodClient(addCampaignFormSchema),
 		dataType: 'json',
 		onSubmit: () => {
+			if (!allFieldsFilled()) {
+				toast.error('Please fill in all fields');
+				return false;
+			}
 			loading = true;
 		},
 		onResult: () => {
@@ -30,6 +36,11 @@
 	});
 
 	const { form: formData, enhance, allErrors } = superFormData;
+
+	function allFieldsFilled() {
+		const { campaignname, Assistant, Client } = $formData;
+		return campaignname && Assistant && Client;
+	}
 
 	interface Field {
 		label: string;
