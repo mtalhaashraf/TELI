@@ -3,10 +3,10 @@ import { string, z } from 'zod';
 export const editClientFormSchema = z.object({
 	full_name: z.string().min(3,"Full name is required"),
 	company_name: z.string().min(3, "Company name is required"),
-	website: z.string().min(5, "Website is required").url("Invalid website format, format should be like (http://www.name.com)"),
+	website: z.string().url("Website is required, format like (http://www.name.com)"),
 	phone: z.string().min(10).regex(/^[0-9]+$/).min(10, "Phone number must be at least 10 digits long"),
 	cell: z.string().min(10).regex(/^[0-9]+$/).min(10, "Phone number must be at least 10 digits long"),
-	email: z.string().min(3, "Email is required").email('Invalid email address'),
+	email: z.string().email('Email is required'),
 	status: z.object({
 		label: z.string(),
 		value: z.string()

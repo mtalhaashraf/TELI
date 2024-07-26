@@ -6,6 +6,8 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
 	import { page } from '$app/stores';
+	import { toast } from 'svelte-sonner';
+
 
 	export let form;
 
@@ -17,6 +19,10 @@
 		validators: zodClient(editClientFormSchema),
 		dataType: 'json',
 		onSubmit: () => {
+			if (!allFieldsFilled()) {
+				toast.error('Please fill in all fields');
+				return false;
+			}
 			loading = true;
 		},
 		onResult: () => {
@@ -29,6 +35,11 @@
 	});
 
 	const { form: formData, enhance } = superFormData;
+
+	function allFieldsFilled() {
+		const { name, firstMessage, systemPrompt } = $formData;
+		return name && firstMessage && systemPrompt;
+	}
 
 	interface Field {
 		label: string;
