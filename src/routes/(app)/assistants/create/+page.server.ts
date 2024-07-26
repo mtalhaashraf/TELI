@@ -26,7 +26,7 @@ export const actions: Actions = {
 			redirect(303, '/auth');
 		}
 
-		const form = await superValidate(event, zod(editAssistantFormSchema));
+		const form = await superValidate(event, zod(addAssistantFormSchema));
 
 		if (!form.valid) {
 			return fail(400, {

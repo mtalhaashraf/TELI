@@ -14,6 +14,10 @@
 	const superFormData = superForm(form, {
 		validators: zodClient(editAssistantFormSchema),
 		onSubmit: () => {
+			if (!allFieldsFilled()) {
+				toast.error('Please fill in all fields');
+				return false;
+			}
 			loading = true;
 		},
 		onResult: ({ result }: any) => {
@@ -29,6 +33,11 @@
 	});
 
 	const { form: formData, enhance } = superFormData;
+
+	function allFieldsFilled() {
+		const { name, firstMessage, systemPrompt } = $formData;
+		return name && firstMessage && systemPrompt;
+	}
 </script>
 
 <div class="flex w-full flex-col items-center">

@@ -5,6 +5,7 @@
 	import { superForm, type FormPath, type Infer } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '../ui/select';
+	import { number } from 'zod';
 
 	export let form;
 
@@ -56,11 +57,13 @@
 		},
 		{
 			label: 'Phone',
-			name: 'phone'
+			name: 'phone',
+			type: "number"
 		},
 		{
 			label: 'Mobile',
-			name: 'cell'
+			name: 'cell',
+			type: "number"
 		},
 		{
 			label: 'Email',
@@ -77,7 +80,7 @@
 		}
 	];
 
-	$: console.log($formData);
+	// $: console.log($formData);
 </script>
 
 <div class="flex w-full flex-col items-center">

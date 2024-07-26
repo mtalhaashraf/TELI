@@ -57,11 +57,13 @@
 		},
 		{
 			label: 'Phone',
-			name: 'phone'
+			name: 'phone',
+			type: 'number'
 		},
 		{
 			label: 'Mobile',
-			name: 'cell'
+			name: 'cell',
+			type: 'number'
 		},
 		{
 			label: 'Email',
